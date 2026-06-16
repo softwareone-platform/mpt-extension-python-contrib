@@ -1,0 +1,22 @@
+# Copier template for one independently released contrib module.
+# Rendered by `make create-module` (the workspace wiring is applied separately).
+_templates_suffix: ""
+_answers_file: .copier-answers.yml
+
+module:
+  type: str
+  help: "Module name in kebab-case (e.g. payment-terms)"
+  validator: >-
+    {% if not (module | regex_search('^[a-z][a-z0-9]*(-[a-z0-9]+)*$')) %}
+    module must be lowercase kebab-case
+    {% endif %}
+
+python_name:
+  type: str
+  default: "{{ module.replace('-', '_') }}"
+  when: false
+
+distribution:
+  type: str
+  default: "mpt-extension-contrib-{{ module }}"
+  when: false
