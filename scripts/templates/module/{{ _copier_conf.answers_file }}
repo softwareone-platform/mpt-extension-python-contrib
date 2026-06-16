@@ -1,0 +1,2 @@
+# Managed by Copier — do not edit by hand. Run `copier update` to refresh.
+{{ _copier_answers|to_nice_yaml }}
