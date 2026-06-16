@@ -23,7 +23,7 @@ down:  ## Stop and remove containers
 format:  ## Format code (ruff import-sort + format); pkg=<module> to scope
 	$(RUN) bash -c "ruff check --select I --fix $(LINT_TARGETS) && ruff format $(LINT_TARGETS)"
 
-check:  ## Run static checks: ruff, flake8, mypy, uv lock; pkg=<module> to scope
+check: repo-check  ## Run repo structure check + ruff, flake8, mypy, uv lock; pkg=<module> to scope
 	$(RUN) bash -c "$(SYNC) && ruff format --check $(LINT_TARGETS) && ruff check $(LINT_TARGETS) && flake8 $(LINT_TARGETS) && mypy $(TYPE_TARGETS) && uv lock --check"
 
 test:  ## Run the test suite; pkg=<module> to scope

@@ -52,9 +52,10 @@ A `make` toolchain runs the same checks inside a shared Docker image (so local
 results match CI):
 
 ```bash
-make check-all              # ruff + flake8 + mypy + pytest for all packages
+make check-all              # repo-check + ruff + flake8 + mypy + pytest for all packages
 make check pkg=<module>     # scope checks to one package
 make format                 # auto-format with ruff
+make repo-check             # validate workspace package structure (run by `make check`)
 ```
 
 > CI workflows and the release pipeline are being added by subsequent Foundation
