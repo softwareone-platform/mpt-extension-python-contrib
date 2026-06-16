@@ -51,6 +51,14 @@ Python import:        mpt_extension_contrib.<module_with_underscores>
 - Do not invent release, compatibility, or testing guarantees that are not
   represented in repository code or documentation.
 
-> Repository tooling (make targets, Docker development image, CI workflows), the
-> release pipeline, and per-module documentation are being introduced incrementally
-> by the Foundation stories and are not all present yet.
+## Where things live
+
+- [README.md](README.md): purpose, repository structure, the two-view model, the
+  naming rule, and the `make` workflow.
+- [docs/releases.md](docs/releases.md): how a module is versioned, tagged, and
+  published.
+- [`make/`](make): canonical commands; prefer them over ad hoc `uv`/Docker calls.
+- [`scripts/`](scripts): repository tooling (`scaffold_module.py`,
+  `check_repository.py`, `detect_changed_packages.py`, `prepare_release.py`).
+- [`.github/workflows/`](.github/workflows): changed-only PR CI and the manual
+  release workflow.
