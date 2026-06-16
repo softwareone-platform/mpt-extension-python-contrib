@@ -61,12 +61,26 @@ def affected_packages(changed_files: list[str]) -> list[str]:
     ]
 
 
-def write_github_output(packages: list[str]) -> None:
-    """Expose the detected packages to a GitHub Actions workflow when requested."""
+def sonar_secret_name(module: str) -> str:
+    """Return the CI secret name that holds the module's SonarCloud token."""
+    suffix = module.upper().replace("-", "_")
+    return f"SONAR_TOKEN_{suffix}"
+
+
+def package_matrix(changed_files: list[str]) -> list[dict[str, str]]:
+    """Return CI matrix entries (module name + its Sonar secret) for affected packages."""
+    return [
+        {"name": member, "sonar_secret": sonar_secret_name(member)}
+        for member in affected_packages(changed_files)
+    ]
+
+
+def write_github_output(matrix: list[dict[str, str]]) -> None:
+    """Expose the detected matrix to a GitHub Actions workflow when requested."""
     output_path = os.getenv("GITHUB_OUTPUT")
     if output_path:
         with Path(output_path).open("a", encoding="utf-8") as stream:
-            stream.write(f"packages={json.dumps(packages)}\n")
+            stream.write(f"packages={json.dumps(matrix)}\n")
 
 
 def main() -> int:
@@ -75,9 +89,9 @@ def main() -> int:
     parser.add_argument("--files", nargs="*", default=[], help="changed file paths")
     args = parser.parse_args()
 
-    packages = affected_packages(args.files)
-    write_github_output(packages)
-    sys.stdout.write(f"{json.dumps(packages)}\n")
+    matrix = package_matrix(args.files)
+    write_github_output(matrix)
+    sys.stdout.write(f"{json.dumps(matrix)}\n")
     return 0
 
 
