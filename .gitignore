@@ -40,19 +40,3 @@ htmlcov/
 
 # Makefile local overrides
 make/local.mk
-
-# mpt-tool
-.migrations-state.json
-
-# Generated extension UI assets
-static/*
-!static/.gitkeep
-
-# Runtime identity and meta
-*_identity.json
-**/meta.yaml
-**/meta.generated.yaml
-
-# Frontend
-**/node_modules/
-**/dist/
