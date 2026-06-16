@@ -69,8 +69,11 @@ make create-module module=<kebab-case-name>
 ```
 
 This renders `<module>/` from `scripts/templates/module` (via
-[copier](https://copier.readthedocs.io/)) and copies the repository `LICENSE`
-into it.
+[copier](https://copier.readthedocs.io/)), copies the repository `LICENSE` into
+it, and **auto-wires** the module into the workspace — the root `pyproject.toml`
+(`members`, pytest `testpaths`, mypy `mypy_path`), `make/common.mk` `PACKAGES`,
+and the package tables in `README.md` and `AGENTS.md` — then refreshes
+`uv.lock`.
 
 ## Documentation
 
