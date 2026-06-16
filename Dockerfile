@@ -1,6 +1,6 @@
 FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS base
 
-WORKDIR /extension
+WORKDIR /workspace
 
 RUN uv venv /opt/venv
 
