@@ -1,0 +1,21 @@
+[project]
+name = "mpt-extension-contrib-shared"
+version = "0.0.0"
+description = "Internal shared utilities for mpt-extension-contrib packages."
+requires-python = ">=3.12"
+dependencies = []
+
+[dependency-groups]
+dev = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mpt_extension_contrib"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "mpt_extension_contrib/shared",
+]
