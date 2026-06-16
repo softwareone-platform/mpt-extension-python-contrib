@@ -28,8 +28,7 @@ def test_namespace_is_pep420_package() -> None:
 
 def test_distributions_coexist_without_shadowing() -> None:
     result = frozenset(
-        Path(importlib.import_module(name).__file__).parent
-        for name in PACKAGE_MODULES
+        Path(importlib.import_module(name).__file__).parent for name in PACKAGE_MODULES
     )
 
     assert len(result) == len(PACKAGE_MODULES)
