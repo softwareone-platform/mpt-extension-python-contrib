@@ -1,5 +1,8 @@
 ## Repository-management targets. Do not modify shared *.mk files.
 
+repo-check:  ## Validate workspace package structure and metadata
+	$(RUN) python scripts/check_repository.py
+
 create-module:  ## Scaffold a new module from the copier template (module=<kebab-case-name>)
 	$(call require,module)
 	$(RUN) python scripts/scaffold_module.py --module $(module)

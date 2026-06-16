@@ -183,7 +183,6 @@ statistics = false
 per-file-ignores = [
   "/*.py: WPS412",
   "**/tests/**: WPS202, WPS211, WPS432",
-  "scripts/scaffold_module.py: WPS202, WPS210",
 ]
 
 [tool.mypy]

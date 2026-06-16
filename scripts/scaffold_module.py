@@ -32,37 +32,33 @@ def render_insert(source_text: str, anchor: str, addition: str) -> str:
     return source_text.replace(anchor, f"{anchor}{addition}", 1)
 
 
-def insert_after(path: Path, anchor: str, addition: str) -> None:
-    """Insert text immediately after the first occurrence of one anchor in a file."""
-    try:
-        new_text = render_insert(path.read_text(encoding="utf-8"), anchor, addition)
-    except ValueError as exc:
-        raise ValueError(f"{path.name}: {exc}") from exc
-    path.write_text(new_text, encoding="utf-8")
-
-
 def wiring_edits(module: str) -> list[tuple[Path, str, str]]:
     """Return the (file, anchor, addition) edits that register one module."""
     import_name = python_name(module)
     distribution = f"mpt-extension-contrib-{module}"
-    root_pyproject = ROOT / "pyproject.toml"
+    pyproject = ROOT / "pyproject.toml"
     shared_row = (
         "| `shared/` | `mpt-extension-contrib-shared` | `mpt_extension_contrib.shared` | internal |"
     )
-    new_row = (
-        f"\n| `{module}/` | `{distribution}` | `mpt_extension_contrib.{import_name}` | public |"
-    )
-    agents_bullet = (
-        f"\n- [`{module}/`]({module}): public package exposed as "
-        f"`mpt_extension_contrib.{import_name}` (distribution `{distribution}`)."
-    )
+    contrib = "mpt_extension_contrib"
     return [
-        (root_pyproject, '[tool.uv.workspace]\nmembers = [\n  "shared",', f'\n  "{module}",'),
-        (root_pyproject, '  "shared/tests",', f'\n  "{module}/tests",'),
-        (root_pyproject, 'mypy_path = [\n  "shared",', f'\n  "{module}",'),
+        (pyproject, '[tool.uv.workspace]\nmembers = [\n  "shared",', f'\n  "{module}",'),
+        (pyproject, '  "shared/tests",', f'\n  "{module}/tests",'),
+        (pyproject, 'mypy_path = [\n  "shared",', f'\n  "{module}",'),
         (ROOT / "make" / "common.mk", "PACKAGES := shared", f" {module}"),
-        (ROOT / "README.md", shared_row, new_row),
-        (ROOT / "AGENTS.md", "(distribution `mpt-extension-contrib-shared`).", agents_bullet),
+        (
+            ROOT / "README.md",
+            shared_row,
+            f"\n| `{module}/` | `{distribution}` | `{contrib}.{import_name}` | public |",
+        ),
+        (
+            ROOT / "AGENTS.md",
+            "(distribution `mpt-extension-contrib-shared`).",
+            (
+                f"\n- [`{module}/`]({module}): public package exposed as "
+                f"`{contrib}.{import_name}` (distribution `{distribution}`)."
+            ),
+        ),
     ]
 
 
@@ -74,14 +70,11 @@ def wire(module: str) -> None:
     """
     rendered: dict[Path, str] = {}
     for path, anchor, addition in wiring_edits(module):
-        current = rendered.get(path, path.read_text(encoding="utf-8"))
-        try:
-            rendered[path] = render_insert(current, anchor, addition)
-        except ValueError as exc:
-            raise ValueError(f"{path.name}: {exc}") from exc
-
-    for path, new_text in rendered.items():
-        path.write_text(new_text, encoding="utf-8")
+        rendered[path] = render_insert(
+            rendered.get(path, path.read_text(encoding="utf-8")), anchor, addition
+        )
+    for path, text in rendered.items():
+        path.write_text(text, encoding="utf-8")
 
 
 def scaffold(module: str) -> Path:
