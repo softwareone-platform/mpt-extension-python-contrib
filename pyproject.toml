@@ -1,6 +1,7 @@
 [tool.uv.workspace]
 members = [
   "shared",
+  "due-date",
 ]
 
 [dependency-groups]
@@ -128,7 +129,9 @@ convention = "google"
 
 [tool.pytest.ini_options]
 testpaths = [
+  "tests",
   "shared/tests",
+  "due-date/tests",
 ]
 pythonpath = [
   ".",
@@ -199,6 +202,7 @@ ignore_missing_imports = true
 local_partial_types = true
 mypy_path = [
   "shared",
+  "due-date",
 ]
 strict = true
 warn_unreachable = true
