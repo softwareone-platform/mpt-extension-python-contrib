@@ -80,3 +80,5 @@ and the package tables in `README.md` and `AGENTS.md` — then refreshes
 
 - [AGENTS.md](AGENTS.md): entry point and working protocol for contributors and AI
   agents.
+- [docs/releases.md](docs/releases.md): how to release a module (tags, versions,
+  the Release workflow, and PyPI setup).
