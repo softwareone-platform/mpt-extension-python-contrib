@@ -33,7 +33,7 @@ jobs:
     needs: prepare
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write  # push the release tag and create the GitHub release
       id-token: write  # PyPI trusted publishing (scoped to this job only)
     timeout-minutes: 10
     strategy:
@@ -47,6 +47,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -74,5 +76,43 @@ jobs:
           test -f "$PACKAGE/dist/$normalized-$VERSION.tar.gz"
           test -f "$PACKAGE/dist/$normalized-$VERSION-py3-none-any.whl"
 
+      - name: Create or verify the release tag
+        env:
+          TAG: ${{ matrix.tag }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          target="$(git rev-parse HEAD)"
+          if git show-ref --tags --verify --quiet "refs/tags/$TAG"; then
+            test "$(git rev-list -n 1 "$TAG")" = "$target"
+          else
+            git tag -a "$TAG" -m "Release $TAG"
+            git push origin "$TAG"
+          fi
+
       - name: Publish to PyPI
         run: uv publish "${{ matrix.package }}"/dist/*
+
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PACKAGE: ${{ matrix.package }}
+          DISTRIBUTION: ${{ matrix.distribution }}
+          VERSION: ${{ matrix.version }}
+          TAG: ${{ matrix.tag }}
+        run: |
+          previous="$(git tag --list "${PACKAGE}-[0-9]*" --sort=-version:refname | grep -v "^${TAG}$" | head -1)"
+          range="${previous:+${previous}..HEAD}"
+          {
+            echo "## Changes in ${PACKAGE}"
+            git log --reverse --format='- %s (`%h`)' ${range:-HEAD} -- "$PACKAGE" || true
+          } > "$RUNNER_TEMP/notes.md"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$PACKAGE"/dist/* --clobber
+          else
+            gh release create "$TAG" "$PACKAGE"/dist/* \
+              --verify-tag \
+              --title "$DISTRIBUTION v$VERSION" \
+              --notes-file "$RUNNER_TEMP/notes.md" \
+              --latest
+          fi
