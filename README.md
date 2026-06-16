@@ -65,45 +65,29 @@ that installs only the modules it needs).
 
 ## Development
 
-This repository is a [uv](https://docs.astral.sh/uv/) workspace (Python 3.12).
+Everything runs through `make` inside a shared Docker image, so local results match
+CI:
 
 ```bash
-uv sync --all-packages --all-groups   # create the workspace environment
-uv lock --check                       # verify the lockfile is current
-uv run ruff check .                   # lint
-uv run ruff format --check .          # formatting
-uv run flake8 .                       # wemake style checks
-uv run mypy .                         # type checking
+make build         # build the dev image (after changing uv.lock)
+make check-all     # repo-check + ruff + flake8 + mypy + pytest (pkg=<module> to scope)
+make format        # auto-format with ruff
 ```
 
-A `make` toolchain runs the same checks inside a shared Docker image (so local
-results match CI):
-
-```bash
-make check-all              # repo-check + ruff + flake8 + mypy + pytest for all packages
-make check pkg=<module>     # scope checks to one package
-make format                 # auto-format with ruff
-make repo-check             # validate workspace package structure (run by `make check`)
-```
-
-CI runs the same checks on every PR, building/testing only the packages a change
-touched (`.github/workflows/pr-build-merge.yml`). Releases are published per module
-through a manual workflow — see [docs/releases.md](docs/releases.md).
+Full setup, dependency, non-Docker, and module-scaffold commands are in
+[docs/local-development.md](docs/local-development.md). CI builds/tests only the
+packages a change touched; releases are per module — see
+[docs/releases.md](docs/releases.md).
 
 ## Adding a module
-
-Scaffold a new contrib distribution from the template:
 
 ```bash
 make create-module module=<kebab-case-name>
 ```
 
-This renders `<module>/` from `scripts/templates/module` (via
-[copier](https://copier.readthedocs.io/)), copies the repository `LICENSE` into
-it, and **auto-wires** the module into the workspace — the root `pyproject.toml`
-(`members`, pytest `testpaths`, mypy `mypy_path`), `make/common.mk` `PACKAGES`,
-and the package tables in `README.md` and `AGENTS.md` — then refreshes
-`uv.lock`.
+Renders the module, copies the `LICENSE`, and **auto-wires** it into the workspace
+(`members`, `PACKAGES`, pytest/mypy paths, the README/AGENTS tables), then refreshes
+`uv.lock`. See [docs/contributing.md](docs/contributing.md).
 
 ## Documentation
 
@@ -113,6 +97,8 @@ and the package tables in `README.md` and `AGENTS.md` — then refreshes
   and release model.
 - [docs/contributing.md](docs/contributing.md): repository rules, adding a module, and
   per-module external setup.
+- [docs/local-development.md](docs/local-development.md): local setup, the `make`
+  workflow, dependency commands, and scaffolding.
 - [docs/releases.md](docs/releases.md): how to release a module (tags, versions,
   the Release workflow, and PyPI setup).
 - [docs/testing.md](docs/testing.md): testing strategy and command mapping.

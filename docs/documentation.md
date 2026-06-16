@@ -33,5 +33,7 @@ repository-specific behaviour. (Agents resolve the shared docs locally from
   release model
 - [`contributing.md`](contributing.md): repository rules, adding a module, validation,
   and per-module external setup
+- [`local-development.md`](local-development.md): local setup, the `make` workflow,
+  dependency commands, and scaffolding
 - [`releases.md`](releases.md): tags, versioning, and the manual release workflow
 - [`testing.md`](testing.md): testing strategy and the command mapping
