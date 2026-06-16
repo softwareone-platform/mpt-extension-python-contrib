@@ -7,6 +7,8 @@ TARGETS := $(if $(pkg),$(pkg),$(PACKAGES))
 LINT_TARGETS := $(if $(pkg),$(pkg),$(PACKAGES) tests)
 TEST_TARGETS := $(if $(pkg),$(pkg)/tests,tests $(addsuffix /tests,$(PACKAGES)))
 SYNC = uv sync --frozen --inexact --all-groups $(if $(pkg),--package mpt-extension-contrib-$(pkg),--all-packages)
+UV_SYNC = uv sync --inexact --all-packages --all-groups
+PKG_FLAG = $(if $(pkg),--package mpt-extension-contrib-$(pkg),)
 
 bash:  ## Open a bash shell in the dev image
 	$(RUN_IT) bash
@@ -27,3 +29,17 @@ test:  ## Run the test suite; pkg=<module> to scope
 	$(RUN) bash -c "$(SYNC) && pytest $(TEST_TARGETS)"
 
 check-all: check test  ## Run the full local validation flow (checks + tests)
+
+uv-add:  ## Add a runtime dependency (dep=<dep>; pkg=<module> for one package, else workspace)
+	$(call require,dep)
+	$(RUN) uv add $(PKG_FLAG) $(dep)
+	$(MAKE) build
+
+uv-add-dev:  ## Add a dev dependency (dep=<dep>; pkg=<module> for one package, else workspace)
+	$(call require,dep)
+	$(RUN) uv add --dev $(PKG_FLAG) $(dep)
+	$(MAKE) build
+
+uv-upgrade:  ## Upgrade all deps, or one with dep=<package_name>, and refresh uv.lock
+	$(RUN) bash -c "uv lock $(if $(dep),--upgrade-package $(dep),--upgrade) && $(UV_SYNC)"
+	$(MAKE) build
