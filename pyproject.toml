@@ -6,6 +6,7 @@ members = [
 
 [dependency-groups]
 dev = [
+  "copier==9.*",
   "flake8==7.3.*",
   "flake8-aaa==0.17.*",
   "flake8-pyproject==1.2.*",
@@ -131,6 +132,7 @@ convention = "google"
 [tool.pytest.ini_options]
 testpaths = [
   "tests",
+  "scripts/tests",
   "shared/tests",
   "due-date/tests",
 ]
