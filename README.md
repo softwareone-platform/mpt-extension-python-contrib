@@ -48,8 +48,29 @@ uv run flake8 .                       # wemake style checks
 uv run mypy .                         # type checking
 ```
 
-> Make targets, a Docker-based development image, CI workflows, and the release
-> pipeline are being added by subsequent Foundation stories.
+A `make` toolchain runs the same checks inside a shared Docker image (so local
+results match CI):
+
+```bash
+make check-all              # ruff + flake8 + mypy + pytest for all packages
+make check pkg=<module>     # scope checks to one package
+make format                 # auto-format with ruff
+```
+
+> CI workflows and the release pipeline are being added by subsequent Foundation
+> stories.
+
+## Adding a module
+
+Scaffold a new contrib distribution from the template:
+
+```bash
+make create-module module=<kebab-case-name>
+```
+
+This renders `<module>/` from `scripts/templates/module` (via
+[copier](https://copier.readthedocs.io/)) and copies the repository `LICENSE`
+into it.
 
 ## Documentation
 
