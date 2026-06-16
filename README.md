@@ -109,5 +109,12 @@ and the package tables in `README.md` and `AGENTS.md` — then refreshes
 
 - [AGENTS.md](AGENTS.md): entry point and working protocol for contributors and AI
   agents.
+- [docs/architecture.md](docs/architecture.md): repository model, namespace invariant,
+  and release model.
+- [docs/contributing.md](docs/contributing.md): repository rules, adding a module, and
+  per-module external setup.
 - [docs/releases.md](docs/releases.md): how to release a module (tags, versions,
   the Release workflow, and PyPI setup).
+- [docs/testing.md](docs/testing.md): testing strategy and command mapping.
+- [docs/documentation.md](docs/documentation.md): documentation rules and the full
+  documentation map.

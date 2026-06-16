@@ -6,9 +6,12 @@ Working protocol for any task in this repository:
 2. Read only the relevant local files before making changes.
 3. Read the matching shared standard or operational guidance from
    [`softwareone-platform/mpt-extension-skills`](https://github.com/softwareone-platform/mpt-extension-skills)
-   when the task involves shared engineering conventions.
+   when the task involves shared engineering conventions (resolved locally from
+   `${MPT_EXTENSION_SKILLS_HOME:-$HOME/.mpt-extension-skills}/current`).
 4. Treat repository-local documents as additions, restrictions, or overrides to
    shared guidance.
+5. If a repository-local rule conflicts with a shared or global rule, the
+   repository-local rule takes precedence.
 
 ## Repository model
 
@@ -51,12 +54,27 @@ Python import:        mpt_extension_contrib.<module_with_underscores>
 - Do not invent release, compatibility, or testing guarantees that are not
   represented in repository code or documentation.
 
-## Where things live
+## Read in this order
 
-- [README.md](README.md): purpose, repository structure, the two-view model, the
-  naming rule, and the `make` workflow.
-- [docs/releases.md](docs/releases.md): how a module is versioned, tagged, and
-  published.
+1. [README.md](README.md) — purpose, repository structure, the two-view model, the
+   naming rule, and the `make` workflow.
+2. [docs/architecture.md](docs/architecture.md) — repository model, the namespace
+   invariant, and the release model.
+3. [docs/contributing.md](docs/contributing.md) — before changing dependencies,
+   adding a module, or preparing a pull request.
+4. [docs/testing.md](docs/testing.md) — before changing code or tests.
+5. [docs/releases.md](docs/releases.md) — before tagging or publishing a module.
+6. [docs/documentation.md](docs/documentation.md) — when changing repository
+   documentation; it also holds the full documentation map.
+
+Shared engineering standards (commit messages, pull requests, Python coding, unit
+tests, packaging, make targets) live in
+[`mpt-extension-skills`](https://github.com/softwareone-platform/mpt-extension-skills);
+the documents above link to the relevant shared standard and override it only where
+stated.
+
+Then the code and tooling:
+
 - [`make/`](make): canonical commands; prefer them over ad hoc `uv`/Docker calls.
 - [`scripts/`](scripts): repository tooling (`scaffold_module.py`,
   `check_repository.py`, `detect_changed_packages.py`, `prepare_release.py`).
