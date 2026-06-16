@@ -1,0 +1,8 @@
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    command: bash
+    volumes:
+      - .:/workspace
