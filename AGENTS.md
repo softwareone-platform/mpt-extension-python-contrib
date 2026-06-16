@@ -62,9 +62,11 @@ Python import:        mpt_extension_contrib.<module_with_underscores>
    invariant, and the release model.
 3. [docs/contributing.md](docs/contributing.md) — before changing dependencies,
    adding a module, or preparing a pull request.
-4. [docs/testing.md](docs/testing.md) — before changing code or tests.
-5. [docs/releases.md](docs/releases.md) — before tagging or publishing a module.
-6. [docs/documentation.md](docs/documentation.md) — when changing repository
+4. [docs/local-development.md](docs/local-development.md) — for the local `make`
+   workflow, dependency commands, and scaffolding.
+5. [docs/testing.md](docs/testing.md) — before changing code or tests.
+6. [docs/releases.md](docs/releases.md) — before tagging or publishing a module.
+7. [docs/documentation.md](docs/documentation.md) — when changing repository
    documentation; it also holds the full documentation map.
 
 Shared engineering standards (commit messages, pull requests, Python coding, unit
