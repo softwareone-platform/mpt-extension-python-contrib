@@ -2,6 +2,7 @@
 name = "mpt-extension-contrib-shared"
 version = "0.0.0"
 description = "Internal shared utilities for mpt-extension-contrib packages."
+readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
@@ -17,5 +18,7 @@ packages = ["mpt_extension_contrib"]
 
 [tool.hatch.build.targets.sdist]
 include = [
+  "LICENSE",
   "mpt_extension_contrib/shared",
+  "README.md",
 ]
