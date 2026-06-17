@@ -28,6 +28,40 @@ namespace and is **hard-enforced at 95%** (`--cov-fail-under=95` in the root
 a scoped run installs only the target module, the threshold applies per module under
 `pkg=<module>` and across the whole namespace for a full run.
 
+## Shared test fixtures
+
+Generic Extension SDK fixtures live in
+[`tests/fixtures/sdk.py`](../tests/fixtures/sdk.py) and are registered globally via
+`pytest_plugins` in the root [`conftest.py`](../conftest.py), so every module's tests
+can request them by name:
+
+| Fixture | Provides |
+| --- | --- |
+| `parameter_bag_factory(ordering=…, fulfillment=…)` | a `ParameterBag` from lists of `ParameterValue` |
+| `event_metadata` | a real `EventMetadata` |
+| `runtime_settings` | a real `RuntimeSettings` |
+| `mpt_api_service` | a real `MPTAPIService` whose `orders` service is autospec'd |
+| `order_context_factory(ordering=…, fulfillment=…)` | a real `OrderContext` built from the fixtures above |
+
+`order_context_factory` depends on an `extension_settings` fixture that each module
+provides in its own `tests/conftest.py` (the module's `ExtensionSettings` instance), so
+the built context carries that module's settings. Keep module-specific value builders
+in the module conftest too (for example due-date's `due_date_parameter_factory`).
+
+Prefer these fixtures over constructing SDK objects by hand:
+
+```python
+async def test_my_step(order_context_factory):
+    context = order_context_factory(fulfillment=[...])
+
+    await MyStep().run(context)
+
+    ...
+```
+
+Keep the shared fixtures generic (no product specifics) so other modules can reuse
+them; module-specific builders belong in the module's `tests/conftest.py`.
+
 ## Commands
 
 All checks run inside the shared dev image, so local results match CI:

@@ -13,7 +13,9 @@ Read in this order:
 
 Operational guidance:
 
-- Keep the public API under `mpt_extension_contrib.due_date`.
-- Replace the generated example helper when implementing the real API.
+- Keep the public API under `mpt_extension_contrib.due_date` limited to the
+  pipeline steps, the `DueDateSettings` protocol, and the `DueDateReachedError`
+  exception; keep `calculation` and `parameters` internal.
+- Keep the steps free of product-specific business logic.
 - Add tests under [`tests/`](tests) for every behavior change.
 - Run `make check-all pkg=due-date` from the repository root while iterating.
