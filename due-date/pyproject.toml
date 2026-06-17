@@ -1,7 +1,7 @@
 [project]
 name = "mpt-extension-contrib-due-date"
 version = "0.0.0"
-description = "Due date helpers for Extension SDK projects."
+description = "Contrib helpers for due-date Extension SDK workflows."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []

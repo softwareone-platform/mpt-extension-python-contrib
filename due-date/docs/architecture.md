@@ -1,11 +1,11 @@
 # Architecture
 
-`mpt-extension-contrib-due-date` is an example public contrib package.
+`mpt-extension-contrib-due-date` is a contrib package scaffold.
 
-The module is imported as:
+The generated example API is imported as:
 
 ```python
-from mpt_extension_contrib.due_date import days_until
+from mpt_extension_contrib.due_date import normalize_example
 ```
 
-The package currently exposes due-date calculation helpers only.
+Replace the generated helper with the real module API before release.

@@ -1,6 +1,6 @@
 # AGENTS.md
 
-This module is the example public due-date helper package.
+This module is the `due-date` contrib package.
 
 Read in this order:
 
@@ -14,5 +14,6 @@ Read in this order:
 Operational guidance:
 
 - Keep the public API under `mpt_extension_contrib.due_date`.
+- Replace the generated example helper when implementing the real API.
 - Add tests under [`tests/`](tests) for every behavior change.
 - Run `make check-all pkg=due-date` from the repository root while iterating.

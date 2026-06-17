@@ -1,13 +1,12 @@
 # mpt-extension-contrib-due-date
 
-Due date helpers for Extension SDK projects.
+Contrib helpers for `due-date` Extension SDK workflows.
 
-The import path lives under the contrib namespace:
+See [AGENTS.md](AGENTS.md) for the module documentation map.
 
-```python
-from mpt_extension_contrib.due_date import days_until
-```
+## Documentation
 
-This package is an example distribution used to demonstrate that multiple
-contrib distributions coexist under the shared `mpt_extension_contrib`
-namespace.
+- [Architecture](docs/architecture.md)
+- [Contributing](docs/contributing.md)
+- [Testing](docs/testing.md)
+- [Releases](docs/releases.md)
