@@ -1,5 +1,5 @@
-"""Due date helpers."""
+"""due-date contrib helpers."""
 
-from mpt_extension_contrib.due_date.calculation import days_until
+from mpt_extension_contrib.due_date.example import normalize_example
 
-__all__ = ["days_until"]
+__all__ = ["normalize_example"]
