@@ -94,3 +94,25 @@ jobs:
         uses: SonarSource/sonarqube-scan-action@v8.2.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Single stable check to require in branch protection. The packages job is a
+  # matrix, so its check names vary by changed module and cannot be required by
+  # name; this gate aggregates every job instead.
+  build-gate:
+    if: always()
+    needs: [changes, repository, packages, sonar]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all jobs to pass (skipped is allowed)
+        run: |
+          for result in \
+            "${{ needs.changes.result }}" \
+            "${{ needs.repository.result }}" \
+            "${{ needs.packages.result }}" \
+            "${{ needs.sonar.result }}"; do
+            case "${result}" in
+              success|skipped) ;;
+              *) echo "A required job did not pass: ${result}"; exit 1 ;;
+            esac
+          done
+          echo "All required jobs passed."
