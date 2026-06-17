@@ -56,16 +56,18 @@ Dependabot tracks the root `uv` workspace, `docker`, and `github-actions`
 `uv.lock`, dependency bumps stay coordinated in a single pull request even though
 modules release independently.
 
-## External service setup (per module)
+## External service setup
 
-Some integrations are configured outside the repository and are required before a
-module's first release / first scan:
+Some integrations are configured outside the repository:
 
-- **PyPI** — configure trusted publishing for `mpt-extension-contrib-<module>`; see
+- **PyPI** (per module) — configure trusted publishing for
+  `mpt-extension-contrib-<module>` before its first release; see
   [releases.md](releases.md).
-- **SonarCloud** — add the repository secret `SONAR_TOKEN_<MODULE>` (uppercase, with
-  hyphens as underscores, e.g. `SONAR_TOKEN_DUE_DATE`). The PR workflow selects it by
-  the module's derived name and skips the scan until it exists.
+- **SonarCloud** (once for the repository) — the whole workspace is one SonarCloud
+  project (`softwareone-platform_mpt-extension-python-contrib`), so it works on the
+  free plan. Add a single repository secret `SONAR_TOKEN`; the PR workflow's `sonar`
+  job skips the scan until it exists. Coverage is not sent to SonarCloud — it is
+  enforced locally by the 95% test threshold.
 
 ## Releases
 

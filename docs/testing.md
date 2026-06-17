@@ -23,8 +23,10 @@ due-date/tests/
 
 Tests cover the public behaviour of the affected package. A change to `shared` must
 cover its helper behaviour. Coverage is measured for the `mpt_extension_contrib`
-namespace; a coverage threshold is intentionally not enforced yet — set one once the
-first real modules establish a baseline.
+namespace and is **hard-enforced at 95%** (`--cov-fail-under=95` in the root
+`pyproject.toml`): `make test` fails when coverage drops below the threshold. Because
+a scoped run installs only the target module, the threshold applies per module under
+`pkg=<module>` and across the whole namespace for a full run.
 
 ## Commands
 
@@ -32,7 +34,7 @@ All checks run inside the shared dev image, so local results match CI:
 
 - `make check` — repository structure validation (`scripts/check_repository.py`),
   `ruff format --check`, `ruff check`, `flake8` (wemake), `mypy`, and `uv lock --check`.
-- `make test` — `pytest` with coverage, writing `coverage.xml`.
+- `make test` — `pytest` with coverage; fails under the 95% threshold.
 - `make check-all` — both of the above.
 - Add `pkg=<module>` to scope `check`/`test` to one package; without it the full
   workspace (and the repo-level `tests/`) is checked.
@@ -49,8 +51,8 @@ and tests run with `--import-mode=importlib`.
   distributions coexist under one `mpt_extension_contrib.*` root.
 - **Structure** — `make repo-check` (run by `make check`) validates that the root
   `pyproject.toml` stays workspace-only and that every member has `LICENSE`,
-  `README.md`, `AGENTS.md`, `docs/`, `pyproject.toml`, `sonar-project.properties`,
-  `tests/`, the placeholder version `0.0.0`, and a concrete module `__init__.py`.
+  `README.md`, `AGENTS.md`, `docs/`, `pyproject.toml`, `tests/`, the placeholder
+  version `0.0.0`, and a concrete module `__init__.py`.
 
 ## Pull request CI
 
@@ -64,7 +66,9 @@ and builds/tests only those:
   `.github/`, …) builds/tests every module;
 - a docs-only change runs structure validation without starting the package matrix.
 
-Each package matrix job runs a SonarCloud scan using that module's
-`sonar-project.properties`. The `SONAR_TOKEN_<MODULE>` secret name is derived from the
-module, so adding a module needs no workflow change; the scan is skipped until the
-secret is configured (see [contributing.md](contributing.md)).
+A separate `sonar` job runs one SonarCloud scan for the whole repository, using the
+root [`sonar-project.properties`](../sonar-project.properties) (a single project, so
+it works on the SonarCloud free plan). Coverage is intentionally not reported to
+SonarCloud — it is enforced locally by the 95% test threshold instead. The scan is
+skipped until the single `SONAR_TOKEN` secret is configured (see
+[contributing.md](contributing.md)).

@@ -139,7 +139,7 @@ testpaths = [
 pythonpath = [
   ".",
 ]
-addopts = "--cov=mpt_extension_contrib --cov-report=term-missing --cov-report=xml --import-mode=importlib"
+addopts = "--cov=mpt_extension_contrib --cov-report=term-missing --cov-fail-under=95 --import-mode=importlib"
 log_cli = false
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
