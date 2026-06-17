@@ -14,7 +14,6 @@ REQUIRED_PACKAGE_FILES = (
     "README.md",
     "docs",
     "pyproject.toml",
-    "sonar-project.properties",
     "tests",
 )
 REQUIRED_PACKAGE_DOCS = (

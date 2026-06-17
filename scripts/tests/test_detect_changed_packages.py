@@ -2,7 +2,6 @@ from scripts.detect_changed_packages import (
     affected_packages,
     impacts_all_packages,
     package_matrix,
-    sonar_secret_name,
     workspace_members,
 )
 
@@ -43,13 +42,7 @@ def test_filename_prefix_is_not_global() -> None:
     assert result is False
 
 
-def test_sonar_secret_name() -> None:
-    result = sonar_secret_name("order-status-utils")
-
-    assert result == "SONAR_TOKEN_ORDER_STATUS_UTILS"
-
-
-def test_package_matrix_carries_name_and_secret() -> None:
+def test_package_matrix_carries_name() -> None:
     result = package_matrix(["due-date/x.py"])
 
-    assert result == [{"name": "due-date", "sonar_secret": "SONAR_TOKEN_DUE_DATE"}]
+    assert result == [{"name": "due-date"}]

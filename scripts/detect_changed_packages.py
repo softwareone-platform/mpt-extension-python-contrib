@@ -61,18 +61,9 @@ def affected_packages(changed_files: list[str]) -> list[str]:
     ]
 
 
-def sonar_secret_name(module: str) -> str:
-    """Return the CI secret name that holds the module's SonarCloud token."""
-    suffix = module.upper().replace("-", "_")
-    return f"SONAR_TOKEN_{suffix}"
-
-
 def package_matrix(changed_files: list[str]) -> list[dict[str, str]]:
-    """Return CI matrix entries (module name + its Sonar secret) for affected packages."""
-    return [
-        {"name": member, "sonar_secret": sonar_secret_name(member)}
-        for member in affected_packages(changed_files)
-    ]
+    """Return CI matrix entries (module name) for the affected packages."""
+    return [{"name": member} for member in affected_packages(changed_files)]
 
 
 def write_github_output(matrix: list[dict[str, str]]) -> None:
