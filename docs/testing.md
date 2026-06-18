@@ -86,7 +86,8 @@ and tests run with `--import-mode=importlib`.
 - **Structure** — `make repo-check` (run by `make check`) validates that the root
   `pyproject.toml` stays workspace-only and that every member has `LICENSE`,
   `README.md`, `AGENTS.md`, `docs/`, `pyproject.toml`, `tests/`, the placeholder
-  version `0.0.0`, and a concrete module `__init__.py`.
+  version `0.0.0`, a concrete module `__init__.py`, and a PEP 561 `py.typed` marker
+  so consumers' type checkers honour the shipped annotations.
 
 ## Pull request CI
 
