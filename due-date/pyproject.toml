@@ -1,13 +1,18 @@
 [project]
 name = "mpt-extension-contrib-due-date"
 version = "0.0.0"
-description = "Contrib helpers for due-date Extension SDK workflows."
+description = "Order processing due-date pipeline steps for MPT Extension SDK projects."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "mpt-extension-sdk>=6.3,<7",
+    "pydantic>=2.13,<3",
+]
 
 [dependency-groups]
-dev = []
+dev = [
+    "freezegun==1.5.*",
+]
 
 [build-system]
 requires = ["hatchling"]

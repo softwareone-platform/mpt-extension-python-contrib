@@ -25,9 +25,7 @@ make bash                   # open a shell in the dev image
 make down                   # stop and remove containers
 ```
 
-`make check` runs the repository structure validator, `ruff format --check`,
-`ruff check`, `flake8` (wemake), `mypy`, and `uv lock --check`; `make test` runs
-`pytest` with coverage. See [testing.md](testing.md) for the test details.
+See [testing.md](testing.md) for exactly what `make check` and `make test` run.
 
 ## Adding a module
 
@@ -35,10 +33,8 @@ make down                   # stop and remove containers
 make create-module module=<kebab-case-name>
 ```
 
-This renders the module from the copier template, copies the `LICENSE`, and auto-wires
-it into the workspace, then refreshes `uv.lock`. Replace the generated placeholder
-code, then `make check-all pkg=<module>`. See [contributing.md](contributing.md) for
-the full workflow and the per-module external setup.
+See [contributing.md](contributing.md#adding-a-module) for what this wires and the
+full workflow.
 
 ## Managing dependencies
 

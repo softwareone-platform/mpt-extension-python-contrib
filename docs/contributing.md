@@ -45,9 +45,9 @@ Keep scaffold *content* in `scripts/templates/module/` and the repository *wirin
 
 Follow the shared
 [build-and-checks](https://github.com/softwareone-platform/mpt-extension-skills/blob/main/knowledge/build-and-checks.md)
-workflow; the repo command mapping is in [testing.md](testing.md). `make check-all`
-runs the structure validator, ruff, flake8, mypy, and pytest inside the shared dev
-image so local results match CI. PR CI builds/tests only the modules a change touched.
+workflow. The repo command mapping — what `make check`/`make test` run, all inside
+the shared dev image so local results match CI — is in [testing.md](testing.md). PR CI
+builds/tests only the modules a change touched.
 
 ## Dependencies
 
@@ -66,8 +66,8 @@ Some integrations are configured outside the repository:
 - **SonarCloud** (once for the repository) — the whole workspace is one SonarCloud
   project (`softwareone-platform_mpt-extension-python-contrib`), so it works on the
   free plan. Add a single repository secret `SONAR_TOKEN`; the PR workflow's `sonar`
-  job skips the scan until it exists. Coverage is not sent to SonarCloud — it is
-  enforced locally by the 95% test threshold.
+  job skips the scan until it exists. See [testing.md](testing.md) for how the scan
+  and coverage are wired.
 
 ## Releases
 

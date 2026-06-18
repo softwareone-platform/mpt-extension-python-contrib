@@ -182,7 +182,7 @@ show-source = true
 statistics = false
 per-file-ignores = [
   "/*.py: WPS412",
-  "**/tests/**: WPS202, WPS211, WPS432",
+  "*tests/**: WPS202, WPS211, WPS432",
 ]
 
 [tool.mypy]
