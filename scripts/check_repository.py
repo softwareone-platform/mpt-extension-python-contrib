@@ -35,8 +35,7 @@ def load_toml(path: Path) -> dict[str, Any]:
 
 def workspace_members(pyproject: dict[str, Any]) -> list[str]:
     """Return the declared workspace members as a list of strings."""
-    tool = pyproject.get("tool", {})
-    uv_config = tool.get("uv", {})
+    uv_config = pyproject.get("tool", {}).get("uv", {})
     members = uv_config.get("workspace", {}).get("members", [])
     if not isinstance(members, list):
         return []
@@ -64,7 +63,9 @@ def validate_root() -> tuple[list[str], list[str]]:
 
 
 def validate_files(member: str, package_dir: Path) -> list[str]:
-    """Return errors for missing required files and docs in one package."""
+    """Return errors for missing required files, docs, and namespace markers."""
+    import_name = member.replace("-", "_")
+    package_root = package_dir / "mpt_extension_contrib" / import_name
     errors = [
         f"{member}: missing {required_file}"
         for required_file in REQUIRED_PACKAGE_FILES
@@ -75,17 +76,21 @@ def validate_files(member: str, package_dir: Path) -> list[str]:
         for required_doc in REQUIRED_PACKAGE_DOCS
         if not (package_dir / "docs" / required_doc).is_file()
     )
+    if (package_dir / "mpt_extension_contrib" / "__init__.py").is_file():
+        errors.append(f"{member}: mpt_extension_contrib/__init__.py must not exist (PEP 420)")
+    errors.extend(
+        f"{member}: missing mpt_extension_contrib/{import_name}/{marker}{note}"
+        for marker, note in (("__init__.py", ""), ("py.typed", " (PEP 561)"))
+        if not (package_root / marker).is_file()
+    )
     return errors
 
 
 def validate_metadata(member: str, package_dir: Path) -> list[str]:
-    """Return errors for one package's pyproject metadata and namespace layout."""
+    """Return errors for one package's pyproject metadata."""
     expected_distribution = f"mpt-extension-contrib-{member}"
-    import_name = member.replace("-", "_")
     errors: list[str] = []
 
-    if (package_dir / "mpt_extension_contrib" / "__init__.py").is_file():
-        errors.append(f"{member}: mpt_extension_contrib/__init__.py must not exist (PEP 420)")
     try:
         project = load_toml(package_dir / "pyproject.toml").get("project", {})
     except ValueError as exc:
@@ -99,8 +104,6 @@ def validate_metadata(member: str, package_dir: Path) -> list[str]:
         )
     if project.get("version") != "0.0.0":
         errors.append(f"{member}/pyproject.toml: project.version must be the 0.0.0 placeholder")
-    if not (package_dir / "mpt_extension_contrib" / import_name / "__init__.py").is_file():
-        errors.append(f"{member}: missing mpt_extension_contrib/{import_name}/__init__.py")
     return errors
 
 
