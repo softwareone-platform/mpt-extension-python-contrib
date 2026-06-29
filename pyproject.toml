@@ -3,6 +3,7 @@ members = [
   "shared",
   "order-status",
   "custom-notifications",
+  "reports",
   "due-date",
 ]
 
@@ -138,6 +139,7 @@ testpaths = [
   "shared/tests",
   "order-status/tests",
   "custom-notifications/tests",
+  "reports/tests",
   "due-date/tests",
 ]
 pythonpath = [
@@ -212,6 +214,7 @@ mypy_path = [
   "shared",
   "order-status",
   "custom-notifications",
+  "reports",
   "due-date",
 ]
 strict = true
