@@ -77,35 +77,14 @@ The steps read the parameter external id from
 `context.ext_settings.due_date_parameter` and the deadline length from
 `SetDueDate(days=...)`.
 
-`EnforceDueDate` does not fail the order itself: it records the intent on
-`context.order_state.action` and raises `DueDateReachedError` (a `StopStepError`
-subclass). Following the SDK pipeline-hooks contract, the order is failed by the
-extension's pipeline in an `on_step_stopped` / `on_step_failed` hook:
-
-```python
-from mpt_extension_sdk.errors.step import StopStepError
-from mpt_extension_sdk.pipeline import BasePipeline, OrderStatusActionType
-
-from mpt_extension_contrib.due_date import DueDateReachedError
-
-
-class OrderPipeline(BasePipeline):
-    async def on_step_stopped(self, step, ctx, error: StopStepError) -> None:
-        await super().on_step_stopped(step, ctx, error)
-        action = ctx.order_state.action
-        if action and not ctx.order_state.handled:
-            if action.target_status == OrderStatusActionType.FAIL:
-                await ctx.mpt_api_service.orders.fail(ctx.order_id, action.status_notes)
-            ctx.order_state.handled = True
-```
-
-The hook above applies any declared action generically. When you need
-due-date-specific handling (a notification, a metric, a distinct status note),
-identify it by the exception type — `isinstance(error, DueDateReachedError)` —
-since several steps may raise `StopStepError` in the same pipeline.
+`EnforceDueDate` does not fail the order itself: it records the intent and raises
+`DueDateReachedError` (a `StopStepError`), which the extension's pipeline applies
+in an `on_step_stopped` / `on_step_failed` hook. See [Usage](docs/usage.md) for
+the full setup, including the failure hook.
 
 ## Documentation
 
+- [Usage](docs/usage.md) — install, configure, add the steps, and fail on the deadline
 - [Architecture](docs/architecture.md)
 - [Contributing](docs/contributing.md)
 - [Testing](docs/testing.md)
