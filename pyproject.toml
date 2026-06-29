@@ -2,6 +2,7 @@
 members = [
   "shared",
   "custom-notifications",
+  "reports",
   "due-date",
 ]
 
@@ -136,6 +137,7 @@ testpaths = [
   "scripts/tests",
   "shared/tests",
   "custom-notifications/tests",
+  "reports/tests",
   "due-date/tests",
 ]
 pythonpath = [
@@ -209,6 +211,7 @@ local_partial_types = true
 mypy_path = [
   "shared",
   "custom-notifications",
+  "reports",
   "due-date",
 ]
 strict = true

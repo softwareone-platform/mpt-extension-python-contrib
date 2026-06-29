@@ -5,3 +5,4 @@
 # right team is requested for review even as the monorepo grows.
 /due-date/ @softwareone-platform/sirius
 /custom-notifications/ @softwareone-platform/sirius
+/reports/ @softwareone-platform/sirius
