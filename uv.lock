@@ -10,6 +10,7 @@ resolution-markers = [
 
 [manifest]
 members = [
+    "mpt-extension-contrib-custom-notifications",
     "mpt-extension-contrib-due-date",
     "mpt-extension-contrib-shared",
 ]
@@ -1367,6 +1368,15 @@ wheels = [
 ]
 
 [[package]]
+name = "microsoft-teams-cards"
+version = "2.0.13.4"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/7f/cce9633f635d9e1b2318ce2146a804a14a46c9e34e855c3784beb8ab39b3/microsoft_teams_cards-2.0.13.4.tar.gz", hash = "sha256:de54956a2afbbcf187f2531459967515b4f4743fa784bd0f454eaff1ac675c90", size = 28108, upload-time = "2026-06-08T19:24:07.841Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/20/09/95cad44d4417e33df11a15c82ca1bde442c1f1f77396f936f18896f116c1/microsoft_teams_cards-2.0.13.4-py3-none-any.whl", hash = "sha256:b8b887466c8144675ff5704064daf05ec3ebdf4d322658ab9a25bfc1373d7909", size = 29617, upload-time = "2026-06-08T19:24:17.373Z" },
+]
+
+[[package]]
 name = "mpt-api-client"
 version = "6.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1377,6 +1387,38 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/1f/6f/3a398fdff0374ef4d4a9f1eb07ec89b5d74f9e3c30642d55673754738758/mpt_api_client-6.3.0.tar.gz", hash = "sha256:5e1633a4efa7c167982887d4774df1544df8237f85e49f6912dab10a6cc3a89a", size = 62779, upload-time = "2026-06-02T15:44:09.685Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/15/91/5733e8086d14addd456d5a73e5d93ca9e544949edcf5b382aa252554dd27/mpt_api_client-6.3.0-py3-none-any.whl", hash = "sha256:2fe338c0f867055d9f2738ebb82c66b6bd88c69418fd7ea72ea8dd9909d913f6", size = 143352, upload-time = "2026-06-02T15:44:08.545Z" },
+]
+
+[[package]]
+name = "mpt-extension-contrib-custom-notifications"
+version = "0.0.0"
+source = { editable = "custom-notifications" }
+
+[package.optional-dependencies]
+teams = [
+    { name = "httpx" },
+    { name = "microsoft-teams-cards" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "httpx" },
+    { name = "microsoft-teams-cards" },
+    { name = "respx" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "httpx", marker = "extra == 'teams'", specifier = ">=0.28,<1" },
+    { name = "microsoft-teams-cards", marker = "extra == 'teams'", specifier = ">=2,<3" },
+]
+provides-extras = ["teams"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "httpx", specifier = ">=0.28,<1" },
+    { name = "microsoft-teams-cards", specifier = ">=2,<3" },
+    { name = "respx", specifier = "==0.23.*" },
 ]
 
 [[package]]
@@ -2459,6 +2501,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/ac/c3/e2a2b89f2d3e2179abd6d00ebd70bff6273f37fb3e0cc209f48b39d00cbf/requests-2.34.2.tar.gz", hash = "sha256:f288924cae4e29463698d6d60bc6a4da69c89185ad1e0bcc4104f584e960b9ed", size = 142856, upload-time = "2026-05-14T19:25:27.735Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a0/f4/c67b0b3f1b9245e8d266f0f112c500d50e5b4e83cb6f3b71b6528104182a/requests-2.34.2-py3-none-any.whl", hash = "sha256:2a0d60c172f83ac6ab31e4554906c0f3b3588d37b5cb939b1c061f4907e278e0", size = 73075, upload-time = "2026-05-14T19:25:26.443Z" },
+]
+
+[[package]]
+name = "respx"
+version = "0.23.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "httpx" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/43/98/4e55c9c486404ec12373708d015ebce157966965a5ebe7f28ff2c784d41b/respx-0.23.1.tar.gz", hash = "sha256:242dcc6ce6b5b9bf621f5870c82a63997e8e82bc7c947f9ffe272b8f3dd5a780", size = 29243, upload-time = "2026-04-08T14:37:16.008Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/1d/4a/221da6ca167db45693d8d26c7dc79ccfc978a440251bf6721c9aaf251ac0/respx-0.23.1-py2.py3-none-any.whl", hash = "sha256:b18004b029935384bccfa6d7d9d74b4ec9af73a081cc28600fffc0447f4b8c1a", size = 25557, upload-time = "2026-04-08T14:37:14.613Z" },
 ]
 
 [[package]]
