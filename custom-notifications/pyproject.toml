@@ -11,9 +11,14 @@ teams = [
   "microsoft-teams-cards>=2,<3",
   "httpx>=0.28,<1",
 ]
+ses = [
+  "boto3>=1.34,<2",
+  "jinja2>=3.1,<4",
+]
 
 [project.entry-points."mpt_extension_contrib.custom_notifications.channels"]
 teams = "mpt_extension_contrib.custom_notifications.channels.teams:channel"
+aws_ses = "mpt_extension_contrib.custom_notifications.channels.ses:channel"
 
 [dependency-groups]
 dev = [
@@ -21,6 +26,8 @@ dev = [
   "microsoft-teams-cards>=2,<3",
   "httpx>=0.28,<1",
   "respx==0.23.*",
+  "boto3>=1.34,<2",
+  "jinja2>=3.1,<4",
 ]
 
 [build-system]
