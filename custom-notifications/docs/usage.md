@@ -9,28 +9,34 @@ Each channel is an optional-dependency extra. A base install pulls no channel
 dependencies; request the channels you use:
 
 ```bash
-pip install "mpt-extension-contrib-custom-notifications[teams]"
+pip install "mpt-extension-contrib-custom-notifications[teams,ses]"
 ```
 
 ## 2. Configure channels through settings
 
 A channel is configured by the fields its settings `Protocol` declares. The Teams
-channel reads `teams_webhook_url` and `teams_notifications_enabled`. Inherit each
-installed channel's settings protocol on the extension settings so the contract
-is type-checked:
+channel reads `teams_webhook_url` and `teams_notifications_enabled`; SES reads
+`aws_ses_*` and `email_notifications_enabled`. Inherit each installed channel's
+settings protocol on the extension settings so the contract is type-checked:
 
 ```python
 from dataclasses import dataclass
 
 from mpt_extension_sdk.settings.extension import BaseExtensionSettings
 
+from mpt_extension_contrib.custom_notifications.channels.ses import SesSettings
 from mpt_extension_contrib.custom_notifications.channels.teams import TeamsSettings
 
 
 @dataclass(frozen=True)
-class ExtensionSettings(BaseExtensionSettings, TeamsSettings):
+class ExtensionSettings(BaseExtensionSettings, TeamsSettings, SesSettings):
     teams_webhook_url: str | None = None  # from EXTENSION_CONFIG["MSTEAMS_WEBHOOK_URL"]
     teams_notifications_enabled: bool = False
+    aws_ses_region: str | None = None
+    aws_ses_sender: str | None = None
+    aws_ses_access_key: str | None = None
+    aws_ses_secret_key: str | None = None
+    email_notifications_enabled: bool = False
 ```
 
 A channel is registered only when its settings field is set. Leaving
@@ -121,6 +127,70 @@ teams.send_error(
     facts=FactsSection(title="Context", entries={"Agreement": agreement_id}),
 )
 ```
+
+The SES channel sends HTML email and returns whether SES accepted the message:
+
+```python
+from mpt_extension_contrib.custom_notifications.channels.ses import SesNotifier
+
+sent = registry.get(SesNotifier).send_email(
+    ["services@example.com"],
+    "New AWS account pending deployment",
+    "<p>Order ORD-1 needs manual deployment.</p>",
+)
+```
+
+When you keep a set of templates, `EmailNotificationTemplate` holds a subject and
+HTML body written as **Jinja2** (`{{ variable }}` placeholders, `{% if %}` /
+`{% for %}` blocks, filters). `send_template` renders it with a context and sends.
+Substituted values are HTML-escaped, so a value can't break the markup and CSS
+braces in the body stay literal:
+
+```python
+from mpt_extension_contrib.custom_notifications.channels.ses import (
+    EmailNotificationTemplate,
+    SesNotifier,
+)
+
+DEPLOY_PENDING = EmailNotificationTemplate(
+    subject="New AWS account pending deployment",
+    body="<p>Order {{ order_id }} needs manual deployment.</p>",
+)
+
+registry.get(SesNotifier).send_template(
+    ["services@example.com"],
+    DEPLOY_PENDING,
+    {"order_id": "ORD-1"},
+)
+```
+
+Multi-line HTML emails are easier to keep in their own file than inline in
+Python. `EmailNotificationTemplate.from_file(subject, body_path)` reads the body
+from an `.html` file shipped with your package:
+
+```python
+from pathlib import Path
+
+TEMPLATES = Path(__file__).parent / "templates"
+
+DEPLOY_PENDING = EmailNotificationTemplate.from_file(
+    subject="New AWS account pending deployment",
+    body_path=TEMPLATES / "deploy_pending.html",
+)
+```
+
+```html
+<!-- deploy_pending.html -->
+<html><head><style>body { margin: 0; font-size: 16px; }</style></head>
+<body>
+  <p>Order {{ order_id }} needs manual deployment.</p>
+  {% if error %}<p>Error: {{ error }}</p>{% endif %}
+</body></html>
+```
+
+Recipients and the templates themselves are the consumer's responsibility — the
+channel ships no product templates. To bypass templating entirely, build the
+subject/body yourself and call `send_email` directly.
 
 Channel send methods never raise on transport errors: a failed webhook is logged,
 not propagated, so a notification never breaks the business flow.
