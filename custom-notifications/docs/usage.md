@@ -35,6 +35,24 @@ A channel is registered only when its settings field is set. Leaving
 `teams_webhook_url` unset means the `teams` channel is simply absent — no error,
 no configuration required for channels you do not use.
 
+### Get the Teams webhook URL
+
+Office 365 connectors are retired, so the webhook URL comes from the Teams
+**Workflows** app (Power Automate), not a connector:
+
+1. In Teams, open the target **team → channel**.
+2. Select **More options (...)** next to the channel → **Workflows**.
+3. Choose the template **Post to a channel when a webhook request is received**.
+4. Sign in, set the **Team** and **Channel**, then **Save**.
+5. Copy the generated URL (`https://prod-…logic.azure.com/…`) — this is the
+   value for `teams_webhook_url` (it is always HTTPS).
+
+The channel POSTs an Adaptive Card envelope
+(`{"type": "message", "attachments": [{"contentType": ".card.adaptive", …}]}`),
+so the workflow must forward that payload to its *Post card* action; the default
+incoming-webhook template does. See the Microsoft Learn guide,
+[Create incoming webhooks with Workflows](https://learn.microsoft.com/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook#create-webhooks-using-workflows).
+
 ## 3. Build the registry
 
 `build_registry(settings)` discovers every installed channel and registers the
