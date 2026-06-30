@@ -32,3 +32,14 @@ def empty_settings():
 @pytest.fixture
 def insecure_teams_settings():
     return FakeSettings(teams_webhook_url="http://example.com/workflows/webhook")
+
+
+@pytest.fixture
+def ses_settings():
+    return FakeSettings(
+        aws_ses_region="us-east-1",
+        aws_ses_sender="noreply@example.com",
+        aws_ses_access_key="AKIAEXAMPLE",
+        aws_ses_secret_key="secret",
+        email_notifications_enabled=True,
+    )
