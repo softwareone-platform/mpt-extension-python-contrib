@@ -21,6 +21,7 @@ REQUIRED_PACKAGE_DOCS = (
     "contributing.md",
     "releases.md",
     "testing.md",
+    "usage.md",
 )
 
 

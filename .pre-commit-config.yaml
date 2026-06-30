@@ -40,3 +40,8 @@ repos:
       - id: mypy
         args: ["--config-file=pyproject.toml", "."]
         pass_filenames: false
+        additional_dependencies:
+          - mpt-extension-sdk>=6.3,<7
+          - pydantic>=2.13,<3
+          - microsoft-teams-cards>=2,<3
+          - httpx>=0.28,<1
