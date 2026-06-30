@@ -15,8 +15,9 @@ pip install "mpt-extension-contrib-custom-notifications[teams]"
 ## 2. Configure channels through settings
 
 A channel is configured by the fields its settings `Protocol` declares. The Teams
-channel reads `teams_webhook_url`. Inherit each installed channel's settings
-protocol on the extension settings so the contract is type-checked:
+channel reads `teams_webhook_url` and `teams_notifications_enabled`. Inherit each
+installed channel's settings protocol on the extension settings so the contract
+is type-checked:
 
 ```python
 from dataclasses import dataclass
@@ -29,11 +30,14 @@ from mpt_extension_contrib.custom_notifications.channels.teams import TeamsSetti
 @dataclass(frozen=True)
 class ExtensionSettings(BaseExtensionSettings, TeamsSettings):
     teams_webhook_url: str | None = None  # from EXTENSION_CONFIG["MSTEAMS_WEBHOOK_URL"]
+    teams_notifications_enabled: bool = False
 ```
 
 A channel is registered only when its settings field is set. Leaving
 `teams_webhook_url` unset means the `teams` channel is simply absent — no error,
-no configuration required for channels you do not use.
+no configuration required for channels you do not use. Setting
+`teams_notifications_enabled = False` keeps the channel registered but makes
+sending a no-op, so you can turn Teams off without removing the webhook.
 
 ### Get the Teams webhook URL
 

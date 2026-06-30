@@ -65,4 +65,6 @@ Channel implementations are **not** exported from the root; they live under
   POSTs it to a Power Automate Workflows webhook with `httpx`. Severity helpers
   (`send_warning`/`send_success`/`send_error`/`send_exception`) set the card
   colour and emoji; `send_card` posts an already-built card. Webhook errors are
-  logged and swallowed so notifications never break the business flow.
+  logged and swallowed so notifications never break the business flow. When
+  `teams_notifications_enabled` is false the channel stays registered but
+  `send_card` is a no-op, so sending can be turned off without dropping config.

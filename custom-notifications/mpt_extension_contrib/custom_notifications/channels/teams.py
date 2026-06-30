@@ -57,6 +57,7 @@ class TeamsSettings(Protocol):
     """Settings the Teams channel reads from."""
 
     teams_webhook_url: str | None
+    teams_notifications_enabled: bool
 
 
 @runtime_checkable
@@ -119,8 +120,9 @@ def _facts_blocks(section: FactsSection) -> list[CardElement]:
 class TeamsNotifications:
     """Send Adaptive Cards to a Teams channel via a Workflows webhook."""
 
-    def __init__(self, *, webhook_url: str) -> None:
+    def __init__(self, *, webhook_url: str, enabled: bool) -> None:
         self._webhook_url = webhook_url
+        self._enabled = enabled
 
     def send_warning(
         self,
@@ -167,7 +169,13 @@ class TeamsNotifications:
         self.send_card(self._card(title, text, _EXCEPTION, button=button, facts=facts))
 
     def send_card(self, card: AdaptiveCard) -> None:
-        """Post an already-built Adaptive Card; webhook errors are logged, not raised."""
+        """Post an already-built Adaptive Card; webhook errors are logged, not raised.
+
+        A no-op when the channel is disabled.
+        """
+        if not self._enabled:
+            logger.info("Teams notifications are disabled; skipping send")
+            return
         payload = {
             "type": "message",
             "attachments": [
@@ -216,7 +224,10 @@ def _build(settings: TeamsSettings) -> TeamsNotifications | None:
         return None
     if not webhook_url.startswith("https://"):
         raise ValueError("teams_webhook_url must be an https:// URL")
-    return TeamsNotifications(webhook_url=webhook_url)
+    # Default to enabled when the flag is absent, so settings predating it keep
+    # the previous always-on behaviour instead of raising AttributeError.
+    enabled = getattr(settings, "teams_notifications_enabled", True)
+    return TeamsNotifications(webhook_url=webhook_url, enabled=enabled)
 
 
 channel: NotificationChannel[TeamsSettings] = NotificationChannel(name="teams", build=_build)

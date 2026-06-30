@@ -1,12 +1,21 @@
 import json
+from dataclasses import dataclass
 
 import httpx
 import pytest
+from mpt_extension_contrib.custom_notifications import build_registry
 from mpt_extension_contrib.custom_notifications.channels.teams import (
     Button,
     FactsSection,
     TeamsNotifications,
+    TeamsNotifier,
 )
+
+
+@dataclass(frozen=True)
+class _LegacySettings:
+    teams_webhook_url: str = "https://example.com/webhook"
+
 
 _WEBHOOK = "https://example.com/webhook"
 _ADAPTIVE_CARD_CONTENT_TYPE = "application/vnd.microsoft.card.adaptive"
@@ -14,7 +23,7 @@ _ADAPTIVE_CARD_CONTENT_TYPE = "application/vnd.microsoft.card.adaptive"
 
 @pytest.fixture
 def notifier():
-    return TeamsNotifications(webhook_url=_WEBHOOK)
+    return TeamsNotifications(webhook_url=_WEBHOOK, enabled=True)
 
 
 @pytest.fixture
@@ -94,3 +103,20 @@ def test_request_error_swallowed(notifier, unreachable_route):
     result = notifier.send_error("Title", "Body")
 
     assert result is None
+
+
+def test_disabled_skips_post(respx_mock):
+    notifier = TeamsNotifications(webhook_url=_WEBHOOK, enabled=False)
+
+    notifier.send_error("Title", "Body")  # act
+
+    assert not respx_mock.calls
+
+
+def test_legacy_settings_stay_enabled(respx_mock):
+    route = respx_mock.post(_WEBHOOK).mock(return_value=httpx.Response(200))
+    registry = build_registry(_LegacySettings())
+
+    registry.get(TeamsNotifier).send_error("Title", "Body")  # act
+
+    assert route.called

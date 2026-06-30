@@ -47,7 +47,7 @@ Teams channel — `mpt_extension_contrib.custom_notifications.channels.teams` (e
 | --- | --- |
 | `TeamsNotifications` | Send Adaptive Cards to a Teams channel via a Workflows webhook. |
 | `TeamsNotifier` | `Protocol` a custom Teams implementation must preserve. |
-| `TeamsSettings` | `Protocol` describing the settings the channel reads (`teams_webhook_url`). |
+| `TeamsSettings` | `Protocol` describing the settings the channel reads (`teams_webhook_url`, `teams_notifications_enabled`). |
 | `Button`, `FactsSection` | Value types for a card link button and a facts section. |
 
 ## Usage
