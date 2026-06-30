@@ -5,10 +5,15 @@ import pytest
 
 @dataclass(frozen=True)
 class FakeSettings:
-    """Settings double exposing the fields the built-in channels read."""
+    """Settings double exposing the fields every built-in channel reads."""
 
     teams_webhook_url: str | None = None
     teams_notifications_enabled: bool = False
+    aws_ses_region: str | None = None
+    aws_ses_sender: str | None = None
+    aws_ses_access_key: str | None = None
+    aws_ses_secret_key: str | None = None
+    email_notifications_enabled: bool = False
 
 
 @pytest.fixture
@@ -27,3 +32,14 @@ def empty_settings():
 @pytest.fixture
 def insecure_teams_settings():
     return FakeSettings(teams_webhook_url="http://example.com/workflows/webhook")
+
+
+@pytest.fixture
+def ses_settings():
+    return FakeSettings(
+        aws_ses_region="us-east-1",
+        aws_ses_sender="noreply@example.com",
+        aws_ses_access_key="AKIAEXAMPLE",
+        aws_ses_secret_key="secret",
+        email_notifications_enabled=True,
+    )

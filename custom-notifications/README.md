@@ -1,9 +1,9 @@
 # mpt-extension-contrib-custom-notifications
 
 Shared **notification channels** for SoftwareONE MPT extensions built on the
-Extension SDK. Extensions report to a channel (Microsoft Teams today, AWS SES
-next) through one registry — `ctx.notifications` — instead of re-implementing a
-sender per extension.
+Extension SDK. Extensions report to a channel (Microsoft Teams or AWS SES email)
+through one registry — `ctx.notifications` — instead of re-implementing a sender
+per extension.
 
 Channels are **pluggable**: each is gated by an optional-dependency extra and
 self-registers through an entry point, so a base install pulls no channel
@@ -18,7 +18,7 @@ See [AGENTS.md](AGENTS.md) for the module documentation map.
 ## Install
 
 ```bash
-pip install "mpt-extension-contrib-custom-notifications[teams]"
+pip install "mpt-extension-contrib-custom-notifications[teams,ses]"
 ```
 
 The base distribution has no channel dependencies. Each channel is an extra:
@@ -26,6 +26,7 @@ The base distribution has no channel dependencies. Each channel is an extra:
 | Extra | Pulls in | Channel key |
 | --- | --- | --- |
 | `teams` | `microsoft-teams-cards`, `httpx` | `teams` |
+| `ses` | `boto3`, `jinja2` | `aws_ses` |
 
 ## Public API
 
@@ -49,6 +50,15 @@ Teams channel — `mpt_extension_contrib.custom_notifications.channels.teams` (e
 | `TeamsNotifier` | `Protocol` a custom Teams implementation must preserve. |
 | `TeamsSettings` | `Protocol` describing the settings the channel reads (`teams_webhook_url`, `teams_notifications_enabled`). |
 | `Button`, `FactsSection` | Value types for a card link button and a facts section. |
+
+SES channel — `mpt_extension_contrib.custom_notifications.channels.ses` (extra `ses`):
+
+| Object | Purpose |
+| --- | --- |
+| `SesNotifications` | Send HTML emails through AWS SES (`send_email(...)` / `send_template(...)` -> bool). |
+| `SesNotifier` | `Protocol` a custom SES implementation must preserve. |
+| `SesSettings` | `Protocol` for the settings the channel reads (region, sender, credentials, enable flag). |
+| `EmailNotificationTemplate` | Subject + Jinja2 HTML body (`render(context)`; `from_file(subject, body_path)` to load the body from an `.html` file). |
 
 ## Usage
 

@@ -38,7 +38,7 @@ Channel implementations are **not** exported from the root; they live under
 
 - **One distribution, channels behind extras.** Teams and SES are channels of a
   single distribution, each gated by an optional-dependency extra
-  (`[teams]`, later `[ses]`). A base install pulls no channel dependencies.
+  (`[teams]`, `[ses]`). A base install pulls no channel dependencies.
 - **Channels self-register via entry points.** Every channel advertises a
   `mpt_extension_contrib.custom_notifications.channels` entry point exposing a
   `NotificationChannel`. `build_registry` iterates the group, so built-in and
@@ -68,3 +68,9 @@ Channel implementations are **not** exported from the root; they live under
   logged and swallowed so notifications never break the business flow. When
   `teams_notifications_enabled` is false the channel stays registered but
   `send_card` is a no-op, so sending can be turned off without dropping config.
+- The SES channel sends HTML email through boto3 SES; `send_email(...)` returns
+  `True` when SES accepted the message and `False` when the channel is disabled
+  or SES raised `ClientError`/`BotoCoreError` (logged, not raised). Its factory
+  builds whenever a sender is configured; region and credentials are optional and
+  fall back to boto3's default chain. `EmailNotificationTemplate` renders a
+  Jinja2 subject/body (via `send_template`) for consumers that keep templates.
