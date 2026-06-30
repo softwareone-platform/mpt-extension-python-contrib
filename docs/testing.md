@@ -19,6 +19,7 @@ tests/              # workspace-wide checks (namespace coexistence)
 scripts/tests/      # repository tooling (scaffold, validate, detect, release)
 shared/tests/
 due-date/tests/
+order-status/tests/
 ```
 
 Tests cover the public behaviour of the affected package. A change to `shared` must

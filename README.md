@@ -12,6 +12,7 @@ of them share the `mpt_extension_contrib` namespace.
 | Directory | Distribution | Python import | Visibility |
 | --- | --- | --- | --- |
 | `shared/` | `mpt-extension-contrib-shared` | `mpt_extension_contrib.shared` | internal |
+| `order-status/` | `mpt-extension-contrib-order-status` | `mpt_extension_contrib.order_status` | public |
 | `custom-notifications/` | `mpt-extension-contrib-custom-notifications` | `mpt_extension_contrib.custom_notifications` | public |
 | `due-date/` | `mpt-extension-contrib-due-date` | `mpt_extension_contrib.due_date` | public |
 
