@@ -2,7 +2,7 @@ DC = docker compose -f compose.yaml
 RUN = $(DC) run --rm app
 RUN_IT = $(DC) run --rm -it app
 
-PACKAGES := shared custom-notifications due-date
+PACKAGES := shared fixtures custom-notifications due-date
 TARGETS := $(if $(pkg),$(pkg),$(PACKAGES))
 LINT_TARGETS := $(if $(pkg),$(pkg),$(PACKAGES) tests scripts)
 TYPE_TARGETS := $(if $(pkg),$(pkg),$(PACKAGES) scripts)

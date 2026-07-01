@@ -1,6 +1,7 @@
 [tool.uv.workspace]
 members = [
   "shared",
+  "fixtures",
   "custom-notifications",
   "due-date",
 ]
@@ -129,12 +130,17 @@ convention = "google"
   "PLC2701",
   "SLF001",
 ]
+# The fixtures package is a pytest plugin: it is imported at pytest startup, so
+# its __init__ resolves names lazily (PEP 562 __getattr__) to stay measurable by
+# coverage instead of eagerly re-exporting at import time.
+"fixtures/mpt_extension_contrib/fixtures/__init__.py" = ["RUF067"]
 
 [tool.pytest.ini_options]
 testpaths = [
   "tests",
   "scripts/tests",
   "shared/tests",
+  "fixtures/tests",
   "custom-notifications/tests",
   "due-date/tests",
 ]
@@ -157,6 +163,7 @@ exclude_also = [
 ]
 omit = [
   "__init__.py",
+  "*/plugin.py",
 ]
 
 [tool.flake8]
@@ -185,6 +192,9 @@ statistics = false
 per-file-ignores = [
   "/*.py: WPS412",
   "*tests/**: WPS202, WPS211, WPS432",
+  # fixtures is a pytest plugin: its __init__ uses a lazy PEP 562 __getattr__ so
+  # plugin-startup import stays measurable by coverage (see ruff RUF067 ignore).
+  "fixtures/mpt_extension_contrib/fixtures/__init__.py: WPS412, WPS413",
 ]
 
 [tool.mypy]
@@ -208,6 +218,7 @@ ignore_missing_imports = true
 local_partial_types = true
 mypy_path = [
   "shared",
+  "fixtures",
   "custom-notifications",
   "due-date",
 ]
