@@ -13,6 +13,7 @@ of them share the `mpt_extension_contrib` namespace.
 | --- | --- | --- | --- |
 | `shared/` | `mpt-extension-contrib-shared` | `mpt_extension_contrib.shared` | internal |
 | `custom-notifications/` | `mpt-extension-contrib-custom-notifications` | `mpt_extension_contrib.custom_notifications` | public |
+| `reports/` | `mpt-extension-contrib-reports` | `mpt_extension_contrib.reports` | public |
 | `due-date/` | `mpt-extension-contrib-due-date` | `mpt_extension_contrib.due_date` | public |
 
 ## Naming rule
