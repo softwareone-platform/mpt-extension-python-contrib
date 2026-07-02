@@ -1,6 +1,7 @@
 [tool.uv.workspace]
 members = [
   "shared",
+  "order-status",
   "custom-notifications",
   "due-date",
 ]
@@ -135,6 +136,7 @@ testpaths = [
   "tests",
   "scripts/tests",
   "shared/tests",
+  "order-status/tests",
   "custom-notifications/tests",
   "due-date/tests",
 ]
@@ -208,6 +210,7 @@ ignore_missing_imports = true
 local_partial_types = true
 mypy_path = [
   "shared",
+  "order-status",
   "custom-notifications",
   "due-date",
 ]

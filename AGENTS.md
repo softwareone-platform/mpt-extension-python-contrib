@@ -38,6 +38,7 @@ Python import:        mpt_extension_contrib.<module_with_underscores>
 
 - [`shared/`](shared): internal reusable code exposed as `mpt_extension_contrib.shared`
   (distribution `mpt-extension-contrib-shared`).
+- [`order-status/`](order-status): public package exposed as `mpt_extension_contrib.order_status` (distribution `mpt-extension-contrib-order-status`).
 - [`custom-notifications/`](custom-notifications): public package exposed as `mpt_extension_contrib.custom_notifications` (distribution `mpt-extension-contrib-custom-notifications`).
 - [`due-date/`](due-date): public package exposed as `mpt_extension_contrib.due_date` (distribution `mpt-extension-contrib-due-date`).
 
