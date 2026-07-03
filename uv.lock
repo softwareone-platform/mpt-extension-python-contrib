@@ -12,6 +12,7 @@ resolution-markers = [
 members = [
     "mpt-extension-contrib-custom-notifications",
     "mpt-extension-contrib-due-date",
+    "mpt-extension-contrib-order-status",
     "mpt-extension-contrib-shared",
 ]
 
@@ -1490,6 +1491,20 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [{ name = "freezegun", specifier = "==1.5.*" }]
+
+[[package]]
+name = "mpt-extension-contrib-order-status"
+version = "0.0.0"
+source = { editable = "order-status" }
+dependencies = [
+    { name = "mpt-extension-sdk" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "mpt-extension-sdk", specifier = ">=6.3,<7" }]
+
+[package.metadata.requires-dev]
+dev = []
 
 [[package]]
 name = "mpt-extension-contrib-shared"
