@@ -31,11 +31,19 @@ package root rather than the submodules.
   They read `context.order` (product, status, template, parameters) and call the
   SDK order and template services; they carry no product-specific logic.
 - Template resolution delegates to the SDK `TemplateService.get_template`, which
-  returns the named template or the status default. `resolve_template` adds the
-  fallback log so operators can see when a configured name was missing.
-- `CompleteOrder` completes the order through `orders.complete`. There is no
-  `Completed` order-status action type in the SDK, so completion is a direct
-  service call rather than a declared `OrderStatusAction`.
+  returns the named template or the status default. The module-level
+  `resolve_template` helper adds the fallback log so operators can see when a
+  configured name was missing.
+- Each step exposes an overridable `async resolve_template(self, context)`
+  method that calls the module-level helper by default. Subclass a step and
+  override this method to select a template with custom logic (e.g. by order
+  content) instead of a fixed name; see [Usage](usage.md).
+- `CompleteOrder` completes the order through `orders.complete`, passing only
+  the resolved template. It does not resend `context.order.parameters`: the
+  step does not mutate them, and the SDK `OrderService.complete` treats
+  attributes as optional. There is no `Completed` order-status action type in
+  the SDK, so completion is a direct service call rather than a declared
+  `OrderStatusAction`.
 - `StartOrderProcessing` applies the template through
   `templates.set_order_template` only when it differs from the current one,
   keeping reprocessing idempotent.

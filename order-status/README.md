@@ -59,13 +59,14 @@ class PurchasePipeline(BasePipeline):
   reprocessing is a no-op. When the product has no matching template it logs a
   warning and continues.
 - `CompleteOrder(template_name=...)` — resolves the `Completed` template,
-  completes the order with the current parameters, and refreshes the context
-  order. It is skipped when the order is already completed and stops the
-  pipeline when the product has no completion template at all.
+  completes the order, and refreshes the context order. It is skipped when the
+  order is already completed and stops the pipeline when the product has no
+  completion template at all.
 
 Both steps fall back to the product default template when the requested name is
-not found, logging that the default was used. See [Usage](docs/usage.md) for the
-full setup.
+not found, logging that the default was used. Each step also exposes an
+overridable `resolve_template(self, context)` method for custom template
+selection logic. See [Usage](docs/usage.md) for the full setup.
 
 ## Documentation
 

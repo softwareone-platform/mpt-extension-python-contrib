@@ -5,6 +5,7 @@ from typing import override
 
 from mpt_extension_contrib.order_status.templates import OrderStatus, resolve_template
 from mpt_extension_sdk.errors.step import SkipStepError, StopStepError
+from mpt_extension_sdk.models import Template
 from mpt_extension_sdk.pipeline import BaseStep, OrderContext, refresh_order
 
 logger = logging.getLogger(__name__)
@@ -14,9 +15,8 @@ class CompleteOrder(BaseStep):
     """Switch an order to ``Completed`` using a template, with default fallback.
 
     The completion template is resolved by name from the order's product and
-    falls back to the status default when the name is not found. The current
-    order parameters are persisted with the completion. The step is skipped when
-    the order is already completed, so it is safe to reprocess.
+    falls back to the status default when the name is not found. The step is
+    skipped when the order is already completed, so it is safe to reprocess.
     """
 
     def __init__(self, *, template_name: str | None = None) -> None:
@@ -26,6 +26,26 @@ class CompleteOrder(BaseStep):
             template_name: Template name to use; ``None`` uses the default.
         """
         self._template_name = template_name
+
+    async def resolve_template(self, context: OrderContext) -> Template | None:
+        """Resolve the completion template for the order.
+
+        Delegates to the module-level ``resolve_template`` helper by default.
+        Override this method to customize template selection, e.g. picking a
+        different template name based on order content.
+
+        Args:
+            context: The order pipeline context.
+
+        Returns:
+            The resolved template, or ``None`` when the product has none.
+        """
+        return await resolve_template(
+            context.mpt_api_service,
+            product_id=context.order.product_id,
+            status=OrderStatus.COMPLETED,
+            template_name=self._template_name,
+        )
 
     @override
     async def pre(self, context: OrderContext) -> None:
@@ -52,19 +72,10 @@ class CompleteOrder(BaseStep):
             StopStepError: When the product has no completion template at all.
         """
         product_id = context.order.product_id
-        template = await resolve_template(
-            context.mpt_api_service,
-            product_id=product_id,
-            status=OrderStatus.COMPLETED,
-            template_name=self._template_name,
-        )
+        template = await self.resolve_template(context)
         if template is None:
             raise StopStepError(f"no completion template found for product {product_id}")
-        await context.mpt_api_service.orders.complete(
-            context.order_id,
-            template,
-            {"parameters": context.order.parameters.to_dict()},
-        )
+        await context.mpt_api_service.orders.complete(context.order_id, template)
         logger.info("%s: order has been completed", context.order_id)
 
 
@@ -86,6 +97,26 @@ class StartOrderProcessing(BaseStep):
         """
         self._template_name = template_name
 
+    async def resolve_template(self, context: OrderContext) -> Template | None:
+        """Resolve the processing template for the order.
+
+        Delegates to the module-level ``resolve_template`` helper by default.
+        Override this method to customize template selection, e.g. picking a
+        different template name based on order content.
+
+        Args:
+            context: The order pipeline context.
+
+        Returns:
+            The resolved template, or ``None`` when the product has none.
+        """
+        return await resolve_template(
+            context.mpt_api_service,
+            product_id=context.order.product_id,
+            status=OrderStatus.PROCESSING,
+            template_name=self._template_name,
+        )
+
     @override
     async def process(self, context: OrderContext) -> None:
         """Apply the processing template when it is not already set.
@@ -93,12 +124,7 @@ class StartOrderProcessing(BaseStep):
         Args:
             context: The order pipeline context.
         """
-        template = await resolve_template(
-            context.mpt_api_service,
-            product_id=context.order.product_id,
-            status=OrderStatus.PROCESSING,
-            template_name=self._template_name,
-        )
+        template = await self.resolve_template(context)
         if template is None:
             logger.warning(
                 "%s: no processing template found for product %s; continuing.",

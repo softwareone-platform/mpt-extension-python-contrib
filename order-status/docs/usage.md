@@ -38,9 +38,9 @@ class PurchasePipeline(BasePipeline):
   set, so the step is a no-op when reprocessing. When the product has no
   matching template it logs a warning and continues.
 - `CompleteOrder(template_name=...)` — completes the order with the `Completed`
-  template and the order's current parameters, then refreshes the context order.
-  It is skipped when the order is already `Completed`, and it raises
-  `StopStepError` when the product has no completion template at all.
+  template, then refreshes the context order. It is skipped when the order is
+  already `Completed`, and it raises `StopStepError` when the product has no
+  completion template at all.
 
 ## 3. Template resolution and fallback
 
@@ -62,3 +62,29 @@ template = await resolve_template(
 When the requested name is not found, the default template for the status is
 used and an info log records the fallback, so a misconfigured template name is
 visible in the logs without failing the order.
+
+## 4. Overriding template selection
+
+Each step calls its own `async resolve_template(self, context)` method, which
+delegates to the module-level helper by default. Subclass a step and override
+this method when the template to use depends on order content instead of a
+fixed name:
+
+```python
+from mpt_extension_contrib.order_status import CompleteOrder, OrderStatus, resolve_template
+
+
+class CompletePurchaseOrder(CompleteOrder):
+    async def resolve_template(self, context):
+        if context.order.parameters.get_fulfillment_value("isNewUser"):
+            return await resolve_template(
+                context.mpt_api_service,
+                product_id=context.order.product_id,
+                status=OrderStatus.COMPLETED,
+                template_name="Purchase completed (existing account)",
+            )
+        return await super().resolve_template(context)
+```
+
+Use `CompletePurchaseOrder(template_name="Purchase completed")` in the pipeline
+as usual; the constructor argument is still available to `super().resolve_template()`.

@@ -3,14 +3,46 @@ from mpt_extension_contrib.order_status import CompleteOrder, StartOrderProcessi
 from mpt_extension_sdk.errors.step import SkipStepError, StopStepError
 
 
+class _FixedTemplateCompleteOrder(CompleteOrder):
+    def __init__(self, template):
+        super().__init__()
+        self._template = template
+
+    async def resolve_template(self, context):
+        return self._template
+
+
+class _FixedTemplateStartOrderProcessing(StartOrderProcessing):
+    def __init__(self, template):
+        super().__init__()
+        self._template = template
+
+    async def resolve_template(self, context):
+        return self._template
+
+
 async def test_complete_order_completes_with_template(order_context_factory, template_factory):
     context = order_context_factory(status="Processing")
-    context.mpt_api_service.templates.get_template.return_value = template_factory(name="Completed")
+    order_id = context.order_id
+    template = template_factory(name="Completed")
+    context.mpt_api_service.templates.get_template.return_value = template
     orders = context.mpt_api_service.orders
 
     await CompleteOrder().run(context)
 
-    orders.complete.assert_awaited_once()
+    orders.complete.assert_awaited_once_with(order_id, template)
+
+
+async def test_complete_order_overrides_resolution(order_context_factory, template_factory):
+    custom_template = template_factory(template_id="CUSTOM")
+    context = order_context_factory(status="Processing")
+    order_id = context.order_id
+    orders = context.mpt_api_service.orders
+
+    await _FixedTemplateCompleteOrder(custom_template).run(context)
+
+    orders.complete.assert_awaited_once_with(order_id, custom_template)
+    context.mpt_api_service.templates.get_template.assert_not_awaited()
 
 
 async def test_complete_order_refreshes_order(order_context_factory, template_factory):
@@ -50,6 +82,18 @@ async def test_start_processing_sets_when_unset(order_context_factory, template_
     await StartOrderProcessing().run(context)
 
     templates.set_order_template.assert_awaited_once_with("ORD-0001", new_template)
+
+
+async def test_start_processing_overrides_resolution(order_context_factory, template_factory):
+    custom_template = template_factory(template_id="CUSTOM")
+    context = order_context_factory(template=None)
+    order_id = context.order_id
+    templates = context.mpt_api_service.templates
+
+    await _FixedTemplateStartOrderProcessing(custom_template).run(context)
+
+    templates.set_order_template.assert_awaited_once_with(order_id, custom_template)
+    templates.get_template.assert_not_awaited()
 
 
 async def test_start_processing_sets_when_changed(order_context_factory, template_factory):
