@@ -10,12 +10,12 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from functools import cached_property
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol, override
 
 import boto3
 import jinja2
 from botocore.exceptions import BotoCoreError, ClientError
-from mpt_extension_contrib.custom_notifications.base import NotificationChannel
+from mpt_extension_contrib.custom_notifications.base import Notification, NotificationChannel
 
 logger = logging.getLogger(__name__)
 
@@ -66,12 +66,16 @@ class EmailNotificationTemplate:
         )
 
 
-@runtime_checkable
-class SesNotifier(Protocol):
-    """Contract a custom SES implementation must preserve."""
+class SesNotifier(Notification):
+    """Base class a custom SES implementation subclasses.
+
+    Concrete channels override every method; the registry resolves a channel by
+    the notifier base class it inherits (see :meth:`NotificationRegistry.get`).
+    """
 
     def send_email(self, recipients: list[str], subject: str, body: str) -> bool:
         """Send an HTML email; return whether it was sent."""
+        raise NotImplementedError
 
     def send_template(
         self,
@@ -80,9 +84,10 @@ class SesNotifier(Protocol):
         context: Mapping[str, object],
     ) -> bool:
         """Render ``template`` with ``context`` and send it; return whether it was sent."""
+        raise NotImplementedError
 
 
-class SesNotifications:
+class SesNotifications(SesNotifier):
     """Send HTML emails to recipients through AWS SES."""
 
     def __init__(
@@ -104,6 +109,7 @@ class SesNotifications:
         self._sender = sender
         self._enabled = enabled
 
+    @override
     def send_email(self, recipients: list[str], subject: str, body: str) -> bool:
         """Send an HTML email to ``recipients``; errors are logged, not raised.
 
@@ -128,6 +134,7 @@ class SesNotifications:
             return False
         return True
 
+    @override
     def send_template(
         self,
         recipients: list[str],
@@ -147,21 +154,41 @@ class SesNotifications:
         return boto3.client("ses", **self._client_kwargs)
 
 
-def _build(settings: SesSettings) -> SesNotifications | None:
-    """Build the SES channel from settings, or ``None`` when no sender is set.
+def resolve_config(settings: SesSettings) -> str | None:
+    """Return the sender address when SES is enabled, else ``None``.
 
-    Region and credentials are optional: when unset, boto3 falls back to its
-    default region/credential chain (IAM role, IRSA, shared config).
+    Shared by the sync and async SES channels (the async one imports it). The
+    enable flag is the master switch: a disabled channel is skipped, while an
+    enabled one must be configured. Region and credentials stay optional (boto3
+    falls back to its default region/credential chain), but a partial static
+    credential pair is rejected.
+
+    Raises:
+        ValueError: When enabled but ``aws_ses_sender`` is missing, or when only
+            one of ``aws_ses_access_key`` / ``aws_ses_secret_key`` is set.
     """
-    # Read defensively: settings that do not declare the SES fields (e.g. an
-    # extension using only another channel) simply yield no SES channel rather
-    # than raising AttributeError when every channel is built from one object.
-    sender = getattr(settings, "aws_ses_sender", None)
+    # Read the flag defensively: build_registry builds every channel from one
+    # settings object, so settings that do not target SES (no such field) must
+    # be skipped, not raise. Once enabled, the settings implement SesSettings,
+    # so the remaining fields are read directly.
+    if not getattr(settings, "email_notifications_enabled", False):
+        return None
+    sender = settings.aws_ses_sender
     if not sender:
+        raise ValueError("SES notifications are enabled but aws_ses_sender is not set")
+    if bool(settings.aws_ses_access_key) != bool(settings.aws_ses_secret_key):
+        raise ValueError("aws_ses_access_key and aws_ses_secret_key must be set together")
+    return sender
+
+
+def _build(settings: SesSettings) -> SesNotifications | None:
+    """Build the SES channel from settings, or ``None`` when disabled."""
+    sender = resolve_config(settings)
+    if sender is None:
         return None
     return SesNotifications(
         sender=sender,
-        enabled=settings.email_notifications_enabled,
+        enabled=True,
         region=settings.aws_ses_region,
         access_key=settings.aws_ses_access_key,
         secret_key=settings.aws_ses_secret_key,
@@ -169,4 +196,3 @@ def _build(settings: SesSettings) -> SesNotifications | None:
 
 
 channel: NotificationChannel[SesSettings] = NotificationChannel(name="aws_ses", build=_build)
-"""Entry-point descriptor discovered by :func:`build_registry`."""

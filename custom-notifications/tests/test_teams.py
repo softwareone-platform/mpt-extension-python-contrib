@@ -120,3 +120,8 @@ def test_legacy_settings_stay_enabled(respx_mock):
     registry.get(TeamsNotifier).send_error("Title", "Body")  # act
 
     assert route.called
+
+
+def test_build_rejects_enabled_without_webhook(teams_enabled_unconfigured):
+    with pytest.raises(ValueError, match="teams_webhook_url"):
+        build_registry(teams_enabled_unconfigured)
