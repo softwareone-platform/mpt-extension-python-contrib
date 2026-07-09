@@ -31,7 +31,15 @@ def empty_settings():
 
 @pytest.fixture
 def insecure_teams_settings():
-    return FakeSettings(teams_webhook_url="http://example.com/workflows/webhook")
+    return FakeSettings(
+        teams_webhook_url="http://example.com/workflows/webhook",
+        teams_notifications_enabled=True,
+    )
+
+
+@pytest.fixture
+def teams_enabled_unconfigured():
+    return FakeSettings(teams_notifications_enabled=True)
 
 
 @pytest.fixture
@@ -41,5 +49,19 @@ def ses_settings():
         aws_ses_sender="noreply@example.com",
         aws_ses_access_key="AKIAEXAMPLE",
         aws_ses_secret_key="secret",
+        email_notifications_enabled=True,
+    )
+
+
+@pytest.fixture
+def ses_enabled_unconfigured():
+    return FakeSettings(email_notifications_enabled=True)
+
+
+@pytest.fixture
+def ses_partial_credentials():
+    return FakeSettings(
+        aws_ses_sender="noreply@example.com",
+        aws_ses_access_key="AKIAEXAMPLE",
         email_notifications_enabled=True,
     )

@@ -18,7 +18,9 @@ ses = [
 
 [project.entry-points."mpt_extension_contrib.custom_notifications.channels"]
 teams = "mpt_extension_contrib.custom_notifications.channels.teams:channel"
+teams_async = "mpt_extension_contrib.custom_notifications.channels.teams_async:channel"
 aws_ses = "mpt_extension_contrib.custom_notifications.channels.ses:channel"
+aws_ses_async = "mpt_extension_contrib.custom_notifications.channels.ses_async:channel"
 
 [dependency-groups]
 dev = [

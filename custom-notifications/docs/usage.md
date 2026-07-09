@@ -39,11 +39,14 @@ class ExtensionSettings(BaseExtensionSettings, TeamsSettings, SesSettings):
     email_notifications_enabled: bool = False
 ```
 
-A channel is registered only when its settings field is set. Leaving
-`teams_webhook_url` unset means the `teams` channel is simply absent — no error,
-no configuration required for channels you do not use. Setting
-`teams_notifications_enabled = False` keeps the channel registered but makes
-sending a no-op, so you can turn Teams off without removing the webhook.
+The **enable flag is the master switch**. A channel is registered only when its
+flag is on (`teams_notifications_enabled` / `email_notifications_enabled`);
+leaving it off — the default — means the channel is simply absent, so you
+configure only the channels you use. When a channel **is** enabled, its required
+fields must be set (`teams_webhook_url`, `aws_ses_sender`) or `build_registry`
+raises a clear `ValueError` — an enabled-but-misconfigured channel fails loudly
+rather than being silently skipped. (Not installing a channel's extra also skips
+it.)
 
 ### Get the Teams webhook URL
 
@@ -108,8 +111,8 @@ teams.send_exception("Billing job failed", str(exc))
 
 ## 4. Send notifications
 
-`get(NotifierProtocol)` returns the registered channel that satisfies the
-protocol, typed as that protocol and checked at runtime. The Teams channel
+`get(NotifierProtocol)` returns the registered channel whose class implements the
+protocol (matched by inheritance), typed as that protocol. The Teams channel
 exposes four severity helpers plus a raw-card escape hatch:
 
 ```python
@@ -195,11 +198,36 @@ subject/body yourself and call `send_email` directly.
 Channel send methods never raise on transport errors: a failed webhook is logged,
 not propagated, so a notification never breaks the business flow.
 
+### From async code
+
+Both channels expose async send methods so you never block the event loop. Resolve
+the channel through its async protocol and `await` the `send_*` method — same
+arguments, enable-flag, and error-swallowing as the sync methods:
+
+```python
+from mpt_extension_contrib.custom_notifications.channels.ses_async import AsyncSesNotifier
+from mpt_extension_contrib.custom_notifications.channels.teams_async import AsyncTeamsNotifier
+
+await ctx.notifications.get(AsyncTeamsNotifier).send_error("Sync failed", str(exc))
+await ctx.notifications.get(AsyncSesNotifier).send_email(
+    ["services@example.com"],
+    "New AWS account pending deployment",
+    body,
+)
+```
+
+Async support ships as sibling channels (`teams_async`, `aws_ses_async`) that
+self-register alongside the sync ones and read the same settings — no extra
+configuration. The Teams channel uses `httpx.AsyncClient` for genuine
+non-blocking I/O; `boto3` has no native async, so the SES channel runs its
+blocking call in a worker thread via `asyncio.to_thread` — non-blocking for the
+caller, with no extra dependency.
+
 ## 5. Write your own channel
 
-A channel is any object that satisfies the `Notification` marker protocol, plus a
-`NotificationChannel` descriptor that builds it from settings. There are two ways
-to add one.
+A channel is a class that **inherits** its notifier protocol (so `registry.get`
+resolves it nominally), plus a `NotificationChannel` descriptor that builds it
+from settings. There are two ways to add one.
 
 ### Option A — runtime registration (in-process, no packaging)
 
@@ -207,12 +235,15 @@ Register an instance under any key. This also replaces a built-in channel when
 `override=True`:
 
 ```python
+class MyTeamsNotifications(TeamsNotifier): ...
+
+
 registry.register("teams", MyTeamsNotifications(...), override=True)
 ```
 
-Use this for a one-off or extension-local implementation. The instance only has
-to provide the methods callers expect (for `teams`, the `TeamsNotifier`
-protocol).
+Use this for a one-off or extension-local implementation. Inherit the protocol
+callers resolve by (for `teams`, `TeamsNotifier`) so `get(TeamsNotifier)` finds
+it — `get` matches by inheritance, not by structural shape.
 
 ### Option B — a discoverable channel (own distribution)
 
@@ -229,26 +260,29 @@ installed. Steps:
        slack_webhook_url: str | None
    ```
 
-2. **Notifier protocol** (`runtime_checkable`) — the lookup key for
-   `registry.get(...)` and the contract custom implementations preserve:
+2. **Notifier base class** — the lookup key for `registry.get(...)` and the
+   contract custom implementations subclass. Inherit `Notification` and declare
+   the methods (stub bodies `raise NotImplementedError`); `get` resolves channels
+   by this base class, so it must be a concrete class, not a `Protocol`:
 
    ```python
-   from typing import Protocol, runtime_checkable
+   from mpt_extension_contrib.custom_notifications import Notification
 
 
-   @runtime_checkable
-   class SlackNotifier(Protocol):
-       def send_error(self, title: str, text: str) -> None: ...
+   class SlackNotifier(Notification):
+       def send_error(self, title: str, text: str) -> None:
+           raise NotImplementedError
    ```
 
-3. **Sender** — the concrete implementation. Import the channel SDK at module
+3. **Sender** — the concrete implementation, which **inherits** the notifier
+   protocol so `get(SlackNotifier)` resolves it. Import the channel SDK at module
    level; discovery skips the channel on `ImportError` when the extra is absent:
 
    ```python
    import httpx
 
 
-   class SlackNotifications:
+   class SlackNotifications(SlackNotifier):
        def __init__(self, *, webhook_url: str) -> None:
            self._webhook_url = webhook_url
 

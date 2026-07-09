@@ -7,11 +7,11 @@ from typing import Protocol, runtime_checkable
 
 @runtime_checkable
 class Notification(Protocol):
-    """Marker contract implemented by every notification channel.
+    """Marker contract every notifier base class extends.
 
-    Channels expose their own methods through a channel-specific protocol
-    (for example ``TeamsNotifier``); this marker only gives the registry a
-    common bound.
+    Channels expose their own methods through a channel-specific base class
+    (for example ``TeamsNotifier``) that subclasses this marker; it only gives
+    the registry a common bound for :meth:`NotificationRegistry.get`.
     """
 
 

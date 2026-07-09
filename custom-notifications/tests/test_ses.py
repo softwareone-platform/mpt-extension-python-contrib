@@ -47,6 +47,16 @@ def test_build_skips_unconfigured_ses(empty_settings):
         registry.get(SesNotifier)
 
 
+def test_build_rejects_enabled_without_sender(ses_enabled_unconfigured):
+    with pytest.raises(ValueError, match="aws_ses_sender"):
+        build_registry(ses_enabled_unconfigured)
+
+
+def test_build_rejects_partial_credentials(ses_partial_credentials):
+    with pytest.raises(ValueError, match="set together"):
+        build_registry(ses_partial_credentials)
+
+
 def test_client_is_created_lazily(ses_factory):
     SesNotifications(sender="noreply@example.com", enabled=True)  # act
 
