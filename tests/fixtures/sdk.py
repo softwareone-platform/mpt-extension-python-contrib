@@ -50,6 +50,7 @@ def runtime_settings():
         observability_enabled=False,
         applicationinsights_connection_string="",
         otel_service_name="",
+        otel_otlp_endpoint="",
         ziti_workers=1,
         ziti_reload=False,
     )
