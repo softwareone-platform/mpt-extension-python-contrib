@@ -2,7 +2,7 @@ from typing import override
 
 from mpt_extension_contrib.phase_step.steps import (
     ExpectedPhases,
-    _normalize_phases,  # noqa: PLC2701  # same-package internal helper
+    _normalize_phases,  # ruff:ignore[import-private-name]  # same-package internal helper
     advance_phase,
     require_phase,
 )
