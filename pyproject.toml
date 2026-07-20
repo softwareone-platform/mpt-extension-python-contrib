@@ -2,6 +2,7 @@
 members = [
   "shared",
   "order-status",
+  "phase-step",
   "custom-notifications",
   "reports",
   "due-date",
@@ -138,6 +139,7 @@ testpaths = [
   "scripts/tests",
   "shared/tests",
   "order-status/tests",
+  "phase-step/tests",
   "custom-notifications/tests",
   "reports/tests",
   "due-date/tests",
@@ -213,6 +215,7 @@ local_partial_types = true
 mypy_path = [
   "shared",
   "order-status",
+  "phase-step",
   "custom-notifications",
   "reports",
   "due-date",
