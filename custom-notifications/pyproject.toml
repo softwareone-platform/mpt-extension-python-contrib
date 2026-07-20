@@ -12,7 +12,7 @@ teams = [
   "httpx>=0.28,<1",
 ]
 ses = [
-  "boto3>=1.34,<2",
+  "boto3>=1.43,<2",
   "jinja2>=3.1,<4",
 ]
 
@@ -28,7 +28,7 @@ dev = [
   "microsoft-teams-cards>=2,<3",
   "httpx>=0.28,<1",
   "respx==0.23.*",
-  "boto3>=1.34,<2",
+  "boto3>=1.43,<2",
   "jinja2>=3.1,<4",
 ]
 
