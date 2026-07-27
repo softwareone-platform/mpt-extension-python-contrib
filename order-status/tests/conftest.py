@@ -48,6 +48,7 @@ def order_context_factory(
     runtime_settings,
     event_metadata,
     parameter_bag_factory,
+    auth_context,
 ):
     def factory(status="Processing", product_id="PRD-1", template=None):
         order = Order.model_construct(
@@ -62,6 +63,7 @@ def order_context_factory(
             mpt_api_service=mpt_api_service,
             ext_settings=extension_settings,
             runtime_settings=runtime_settings,
+            auth=auth_context,
             meta=event_metadata,
             order=order,
         )
