@@ -2,6 +2,7 @@ import logging
 from pathlib import Path
 
 import pytest
+from mpt_extension_sdk.api.auth import Account, AccountType, AuthContext
 from mpt_extension_sdk.models import Order, ParameterBag
 from mpt_extension_sdk.pipeline import EventMetadata, OrderContext
 from mpt_extension_sdk.runtime.models import MetaConfig
@@ -26,6 +27,16 @@ def event_metadata():
         object_id="ORD-0001",
         object_type="order",
         task_id="task-1",
+    )
+
+
+@pytest.fixture
+def auth_context():
+    return AuthContext(
+        token="test-token",
+        account=Account(id="ACC-0001", type=AccountType.VENDOR),
+        permissions={},
+        extension_id="EXT-0001",
     )
 
 
@@ -70,6 +81,7 @@ def order_context_factory(
     extension_settings,
     runtime_settings,
     event_metadata,
+    auth_context,
 ):
     def factory(ordering=None, fulfillment=None):
         order = Order.model_construct(
@@ -81,6 +93,7 @@ def order_context_factory(
             mpt_api_service=mpt_api_service,
             ext_settings=extension_settings,
             runtime_settings=runtime_settings,
+            auth=auth_context,
             meta=event_metadata,
             order=order,
         )

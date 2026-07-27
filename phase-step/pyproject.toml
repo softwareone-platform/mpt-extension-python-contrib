@@ -5,7 +5,7 @@ description = "Provisioning-phase gating for MPT Extension SDK pipeline steps."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "mpt-extension-sdk>=6.3,<7",
+    "mpt-extension-sdk>=6.6.1,<7",
     "pydantic>=2.13,<3",
 ]
 
