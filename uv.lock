@@ -1473,15 +1473,15 @@ wheels = [
 
 [[package]]
 name = "mpt-api-client"
-version = "6.3.1"
+version = "6.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "httpx" },
     { name = "httpx-retries" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/a6/f0/6d77d6235801223cfa6a82d13e208469cf12960f4777b841616f64238462/mpt_api_client-6.3.1.tar.gz", hash = "sha256:642f5088c4b2f9608fb70fa9078856423a9096fa118eeede60c6ae9bbb7200f1", size = 65853, upload-time = "2026-06-25T16:05:35.595Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/75/91/51679b504d7e95c84c8207cdcd7556c6d3daa2174758fefc0ced78a787a6/mpt_api_client-6.4.0.tar.gz", hash = "sha256:d51142471862c0b9faa4339c68b193f2bcf94ae63ce523ed00115d371770be83", size = 67099, upload-time = "2026-07-30T16:38:16.622Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/9c/8d/a3ae1ad7836584e4caacae27816666c55858415f2a80390cefa4264be679/mpt_api_client-6.3.1-py3-none-any.whl", hash = "sha256:87cef1feb7d272dcda619818124605381861a633e442334316181ebb36ba18f7", size = 148484, upload-time = "2026-06-25T16:05:34.462Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/0c/b91b41941c7d9035b6a3cb5dba2279f274a339b3eb470a0cb77a5113bad9/mpt_api_client-6.4.0-py3-none-any.whl", hash = "sha256:6ac8bd1ce5a48cfa3b98ba9e70b40579cca4467a6fa36c502449b16512f1257c", size = 149517, upload-time = "2026-07-30T16:38:15.542Z" },
 ]
 
 [[package]]
@@ -1600,7 +1600,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "atlassian-python-api", specifier = "==4.0.*" },
-    { name = "mpt-api-client", specifier = "==6.3.*" },
+    { name = "mpt-api-client", specifier = "==6.4.*" },
     { name = "openpyxl", specifier = "==3.1.*" },
     { name = "requests", specifier = "==2.34.*" },
 ]
@@ -1620,7 +1620,7 @@ dev = []
 
 [[package]]
 name = "mpt-extension-sdk"
-version = "6.6.1"
+version = "6.6.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "fastapi", extra = ["standard"] },
@@ -1635,9 +1635,9 @@ dependencies = [
     { name = "pydantic" },
     { name = "typer" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/b2/28/4cc1b6f09aa627315653811c47a9d0f2832fbdc1ea76ef4d71d3313fb9cd/mpt_extension_sdk-6.6.1.tar.gz", hash = "sha256:3897989b5015de7b71cac6b4be2ce9ed3afe7a80a26fc8ba8b04f1fd5fa8384e", size = 56618, upload-time = "2026-07-23T09:34:38.762Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/48/d9/a2546e29e99633039ae0215c251ed5c18ef9255416081f4000aba4ac6114/mpt_extension_sdk-6.6.2.tar.gz", hash = "sha256:a3e26e343544b3783c0b336036cfa7d7974a5679d7767602957018bc5aefdf83", size = 57950, upload-time = "2026-07-31T10:19:12.527Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/2d/88/d36ec7dff051f09e3c205907ff98f6b87a29586530f58e9edaeb92e64662/mpt_extension_sdk-6.6.1-py3-none-any.whl", hash = "sha256:701a87ce5bd59e0b6ea5f176051ce7770963453bac12116eb279fb9331c106ad", size = 96953, upload-time = "2026-07-23T09:34:37.563Z" },
+    { url = "https://files.pythonhosted.org/packages/b9/21/bf8125d790869f20e42e68b6813025a447cfa0c253a4bc3a5ce747ca5fa8/mpt_extension_sdk-6.6.2-py3-none-any.whl", hash = "sha256:f9da3b0f1571f660bba9438f5d8241be6e9eb08ab859d7b5c76e64d27c0d7c17", size = 100322, upload-time = "2026-07-31T10:19:11.236Z" },
 ]
 
 [[package]]
