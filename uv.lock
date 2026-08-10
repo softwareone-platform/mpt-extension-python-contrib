@@ -510,7 +510,7 @@ wheels = [
 
 [[package]]
 name = "copier"
-version = "9.17.0"
+version = "9.17.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "colorama" },
@@ -527,9 +527,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "questionary" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/08/6a/73ccc2ce53c17a29d650246a625df6342f74cb9d4f15b78a77d311fc6007/copier-9.17.0.tar.gz", hash = "sha256:d966b043a15c74595f7904a6af89f3291135682f8313c4b71ef368811ed554f2", size = 645743, upload-time = "2026-07-13T14:33:04.838Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/40/65/11c8635a27ce06ef525946bb02b1d5271b0f11e5acf9c5ab6d242512598e/copier-9.17.1.tar.gz", hash = "sha256:778e85f1c2de86824a72ddf4a34140744921d6354450c427c4c8a475371b1bda", size = 647338, upload-time = "2026-08-04T09:15:04.826Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/22/2c/68dec88ee26f96af2d4d8ee9d8567313a0826f4fd6bc5ae4527be670d354/copier-9.17.0-py3-none-any.whl", hash = "sha256:fe4e7b59faf4c0e1386eccbb79c6797e6df33ca20d5de49a8372571d8669f2ad", size = 65954, upload-time = "2026-07-13T14:33:03.301Z" },
+    { url = "https://files.pythonhosted.org/packages/7f/bf/3adcb9b3091b36de729dad91c107179c8c7c51adb2b08c31177bb540bef1/copier-9.17.1-py3-none-any.whl", hash = "sha256:f6a48f296e2e536c635213e1000ea71099f9f58f3b464a60f2f0fd386e343628", size = 66364, upload-time = "2026-08-04T09:15:03.026Z" },
 ]
 
 [[package]]
@@ -1464,11 +1464,11 @@ wheels = [
 
 [[package]]
 name = "microsoft-teams-cards"
-version = "2.0.14"
+version = "2.0.15"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/45/73/5e337bf6bde2803d75e5990fc11085d83e99f6184bbd5d6efa5614a26239/microsoft_teams_cards-2.0.14.tar.gz", hash = "sha256:9a6170e72e9207c508b6cb91b950b7785177fbd57adb781c99bc8756e15e8977", size = 28109, upload-time = "2026-07-08T00:18:26.086Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/0d/05054d629afb548937616a7e91cb8c2c2ffbf23e3ff774340ca0ee2a6dfa/microsoft_teams_cards-2.0.15.tar.gz", hash = "sha256:623d87fcd973c823deb5b78cccb27bc35471f535bef10116a7404255f6da5499", size = 28115, upload-time = "2026-08-04T17:12:03.284Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/e9/c22bec14a6f4e8d5e054c23f150012afbf1ef3acf4ee871fc885728eae92/microsoft_teams_cards-2.0.14-py3-none-any.whl", hash = "sha256:5e2eaaed534eab688c25c16111e0159d2946228c7c35315f92f22fff826a30c6", size = 29602, upload-time = "2026-07-08T00:18:32.732Z" },
+    { url = "https://files.pythonhosted.org/packages/7d/b8/c4e5df0f6797363ff8a431bcee1a51a7d8b6fe2e5d4cac21a6bd58e9f50f/microsoft_teams_cards-2.0.15-py3-none-any.whl", hash = "sha256:e2b0257d9b8782830df61eb6aa993a1ddc0349daddd845739da45d2a29a0c44b", size = 29602, upload-time = "2026-08-04T17:12:09.232Z" },
 ]
 
 [[package]]
@@ -3505,16 +3505,16 @@ wheels = [
 
 [[package]]
 name = "wemake-python-styleguide"
-version = "1.7.0"
+version = "1.7.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "attrs" },
     { name = "flake8" },
     { name = "pygments" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/e9/0699a5401f20105ea9ad5ef52f6609ffe59ce01b4becac8cdf004c47d140/wemake_python_styleguide-1.7.0.tar.gz", hash = "sha256:d7af4d971064b8998467fecf3164bc74331974a38ab5e8aee2fe67ddbcb680fd", size = 160196, upload-time = "2026-07-26T09:13:04.181Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/81/9c/ac8ffa2edee50d6ab051562314bece3654c76d5510eff011c49403f8d582/wemake_python_styleguide-1.7.1.tar.gz", hash = "sha256:4703dc96864e324d83308f77bcd921446cba3c160bc2782d413d8a7205072107", size = 160237, upload-time = "2026-07-31T14:28:52.832Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/72/90/deed66bba45fd966db6919c46ba491d99300eb0438bff01577095b2f8eff/wemake_python_styleguide-1.7.0-py3-none-any.whl", hash = "sha256:afec09f29e86fa5ce758d5279cd0a5d261982fa156fbf4f8192e387e64e259e1", size = 224044, upload-time = "2026-07-26T09:13:05.38Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/fa/878cff9dca9a0998086784704f861250d60233cac8961a7b522fae1fc1ed/wemake_python_styleguide-1.7.1-py3-none-any.whl", hash = "sha256:5e7d077e564d9cfb01e777be7b9bddd37843f6b26a8597af3ccd3e931ddfab08", size = 224060, upload-time = "2026-07-31T14:28:54.108Z" },
 ]
 
 [[package]]
