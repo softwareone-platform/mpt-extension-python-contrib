@@ -1,22 +1,11 @@
 """Resolve MPT order templates by name with fallback to the product default."""
 
 import logging
-from enum import StrEnum
 
-from mpt_extension_sdk.models import Template
+from mpt_extension_sdk.models import OrderStatus, Template
 from mpt_extension_sdk.services.mpt_api_service import MPTAPIService
 
 logger = logging.getLogger(__name__)
-
-
-class OrderStatus(StrEnum):
-    """MPT order statuses supported by the order-status pipeline steps.
-
-    Extend this enum as more statuses need template resolution.
-    """
-
-    PROCESSING = "Processing"
-    COMPLETED = "Completed"
 
 
 async def resolve_template(
