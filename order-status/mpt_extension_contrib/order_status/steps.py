@@ -3,9 +3,9 @@
 import logging
 from typing import override
 
-from mpt_extension_contrib.order_status.templates import OrderStatus, resolve_template
+from mpt_extension_contrib.order_status.templates import resolve_template
 from mpt_extension_sdk.errors.step import SkipStepError, StopStepError
-from mpt_extension_sdk.models import Template
+from mpt_extension_sdk.models import OrderStatus, Template
 from mpt_extension_sdk.pipeline import BaseStep, OrderContext, refresh_order
 
 logger = logging.getLogger(__name__)

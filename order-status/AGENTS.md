@@ -18,8 +18,9 @@ Operational guidance:
   pipeline steps (`CompleteOrder`, `StartOrderProcessing`), the
   `resolve_template` helper, and the `OrderStatus` enum; import from the package
   root, not the `steps`/`templates` submodules directly.
-- Extend `OrderStatus` when a step needs to resolve a template for another
-  order status; do not reintroduce plain string status constants.
+- `OrderStatus` is the SDK enum (`mpt_extension_sdk.models.OrderStatus`)
+  re-exported for convenience; do not reintroduce a local enum or plain string
+  status constants. Missing statuses are added in the SDK, not here.
 - Keep the steps free of product-specific business logic.
 - Add tests under [`tests/`](tests) for every behavior change.
 - Run `make check-all pkg=order-status` from the repository root while iterating.

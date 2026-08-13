@@ -19,8 +19,9 @@ from mpt_extension_contrib.order_status import (
 - `steps.py` holds the `BaseStep` subclasses `CompleteOrder` and
   `StartOrderProcessing`.
 - `templates.py` holds `resolve_template`, the status-template resolution
-  primitive, and the `OrderStatus` enum (`PROCESSING`, `COMPLETED`). Extend the
-  enum as more statuses need template resolution.
+  primitive. `OrderStatus` is the SDK marketplace order-status enum
+  (`mpt_extension_sdk.models.OrderStatus`), re-exported from the package
+  `__init__` for convenience.
 
 Both submodules are re-exported from the package `__init__`; import from the
 package root rather than the submodules.

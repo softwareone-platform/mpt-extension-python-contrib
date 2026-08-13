@@ -9,7 +9,7 @@ how the steps resolve templates.
 pip install mpt-extension-contrib-order-status
 ```
 
-Requires the Extension SDK (`mpt-extension-sdk >= 6.3, < 7`), pulled in as a
+Requires the Extension SDK (`mpt-extension-sdk >= 6.6.2, < 6.7`), pulled in as a
 dependency.
 
 ## 2. Add the steps to a pipeline

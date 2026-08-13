@@ -16,7 +16,7 @@ See [AGENTS.md](AGENTS.md) for the module documentation map.
 pip install mpt-extension-contrib-order-status
 ```
 
-Requires the Extension SDK (`mpt-extension-sdk >= 6.3, < 7`), which is pulled in
+Requires the Extension SDK (`mpt-extension-sdk >= 6.6.2, < 6.7`), which is pulled in
 as a dependency.
 
 ## Public API
@@ -29,7 +29,7 @@ one enum:
 | `CompleteOrder(template_name=...)` | Switch the order to `Completed` with a named template, falling back to the default. |
 | `StartOrderProcessing(template_name=...)` | Set the `Processing` template on the first run, falling back to the default. |
 | `resolve_template(api_service, *, product_id, status, template_name=None)` | Resolve a status template by name with default fallback (the primitive both steps use). |
-| `OrderStatus` | `StrEnum` of the order statuses the library resolves templates for (`PROCESSING`, `COMPLETED`). |
+| `OrderStatus` | The SDK marketplace order-status enum (`mpt_extension_sdk.models.OrderStatus`), re-exported for convenience. |
 
 `template_name` is optional on both steps; omit it to use the product's default
 template for the status.
