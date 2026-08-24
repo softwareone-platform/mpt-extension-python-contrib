@@ -57,7 +57,7 @@ class ConfluenceClient:
             ``True`` if the upload succeeded, ``False`` otherwise.
         """
         try:
-            self._client.attach_content(  # type: ignore[no-untyped-call]
+            self._client.attach_content(
                 content=file_content,
                 name=filename,
                 content_type=content_type,
