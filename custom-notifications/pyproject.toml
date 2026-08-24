@@ -8,7 +8,7 @@ dependencies = []
 
 [project.optional-dependencies]
 teams = [
-  "microsoft-teams-cards>=2,<3",
+  "microsoft-teams-cards>=2.0.16,<3",
   "httpx>=0.28,<1",
 ]
 ses = [
@@ -25,7 +25,7 @@ aws_ses_async = "mpt_extension_contrib.custom_notifications.channels.ses_async:c
 [dependency-groups]
 dev = [
   # Channel extras are installed in the dev env so channel code is covered.
-  "microsoft-teams-cards>=2,<3",
+  "microsoft-teams-cards>=2.0.16,<3",
   "httpx>=0.28,<1",
   "respx==0.23.*",
   "boto3>=1.43.61,<2",
