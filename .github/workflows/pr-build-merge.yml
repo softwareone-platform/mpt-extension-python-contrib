@@ -79,10 +79,6 @@ jobs:
   sonar:
     needs: [repository]
     runs-on: ubuntu-latest
-    env:
-      # Single SonarCloud project for the whole repository. Configure the
-      # SONAR_TOKEN secret to enable the scan; until then it is skipped.
-      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v7
@@ -90,10 +86,10 @@ jobs:
           fetch-depth: 0
 
       - name: Run SonarQube scan
-        if: env.SONAR_TOKEN != ''
         uses: SonarSource/sonarqube-scan-action@v8.2.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   # Single stable check to require in branch protection. The packages job is a
   # matrix, so its check names vary by changed module and cannot be required by
