@@ -61,6 +61,7 @@ def order_context_factory(
         return OrderContext(
             logger=logging.getLogger("tests"),
             mpt_api_service=mpt_api_service,
+            vendor_mpt_api_service=mpt_api_service,
             ext_settings=extension_settings,
             runtime_settings=runtime_settings,
             auth=auth_context,
