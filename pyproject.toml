@@ -11,7 +11,7 @@ members = [
 [dependency-groups]
 dev = [
   "copier==9.*",
-  "flake8==7.3.*",
+  "flake8==7.4.*",
   "flake8-aaa==0.17.*",
   "flake8-pyproject==1.2.*",
   "mypy==2.3.*",
@@ -23,7 +23,7 @@ dev = [
   "pytest-mock==3.15.*",
   "pytest-randomly==5.0.*",
   "pytest-xdist==3.8.*",
-  "ruff==0.16.8",
+  "ruff==0.16.9",
   "wemake-python-styleguide==1.8.*",
 ]
 
