@@ -40,3 +40,7 @@ htmlcov/
 
 # Makefile local overrides
 make/local.mk
+
+# Claude
+.claude/*
+!.claude/settings.json
