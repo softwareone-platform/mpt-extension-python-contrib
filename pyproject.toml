@@ -23,7 +23,7 @@ dev = [
   "pytest-mock==3.16.*",
   "pytest-randomly==5.0.*",
   "pytest-xdist==3.8.*",
-  "ruff==0.16.10",
+  "ruff==0.17.0",
   "wemake-python-styleguide==1.8.*",
 ]
 
